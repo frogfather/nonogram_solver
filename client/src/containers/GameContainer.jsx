@@ -8,10 +8,9 @@ class GameContainer extends React.Component{
 
   render(){
     return(
-      <div>
-      Game Container
-      <Game id="game"/>
-      <Sidebar id="sidebar"/>
+      <div id='container'>
+      <Game/>
+      <Sidebar/>
       </div>
       )
   }
