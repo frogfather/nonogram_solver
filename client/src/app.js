@@ -4,7 +4,7 @@ import GameContainer from './containers/GameContainer';
 
 window.onload = function(){
   ReactDOM.render(
-   <GameContainer/>,
+   <GameContainer id="container"/>,
     document.getElementById('app')
   );
 }
