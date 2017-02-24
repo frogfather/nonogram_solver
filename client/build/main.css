@@ -13,20 +13,51 @@ body{
 
 #container{
 display: flex;
-background-color: red;
 height: 100%;
 }
 
 #game{
-display:flex;
+display:flex;  
 flex-grow: 4;
-height:90%;
-background-color: blue;
+flex-wrap: wrap;
 }
+
+
+#colspacer{
+background-color: red;
+width: 20%;
+height: 20%;
+}
+
+#column{
+display:flex;
+background-color: #AA8888;
+width: 80%;
+height:20%;
+}
+
 
 #sidebar{
 display:flex;
 flex-grow: 1;
-height:90%;
-background-color: green;
+height:100%;
+background-color: gray;
+}
+
+
+#row{
+  display: flex;
+  flex-direction: column;
+  background-color: #AA6666;
+  width:20%;
+  height:80%;
+}
+
+#datarow{
+  background-color: #FFAA00;
+}
+
+#grid{
+  background-color: #AA6644;
+  flex-grow: 4;
 }
