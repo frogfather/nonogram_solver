@@ -7,57 +7,88 @@ body{
   height: 100%
   }
 
-#app{
-  height:100%;
-}
-
 #container{
 display: flex;
-height: 100%;
+justify-content: center;
+background-color: blue;
 }
 
 #game{
 display:flex;  
-flex-grow: 4;
 flex-wrap: wrap;
+background-color: pink;
+width:80%;
 }
 
 
 #colspacer{
-background-color: red;
 width: 20%;
-height: 20%;
+background-color: gray;
 }
 
 #column{
 display:flex;
-background-color: #AA8888;
+align-items: flex-end;
 width: 80%;
-height:20%;
 }
 
 
 #sidebar{
 display:flex;
-flex-grow: 1;
-height:100%;
 background-color: gray;
+width:20%;
 }
 
 
 #row{
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   background-color: #AA6666;
   width:20%;
-  height:80%;
+  /*height:80%;*/
 }
 
 #datarow{
+  display: flex;
   background-color: #FFAA00;
+  justify-content: flex-end;
+  margin-bottom: 1px;
+
+}
+#datacol{
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-right: 1px;
+}
+
+#dataelement {
+  background-color: #DDAA55;
+  border: 1px solid white;
+  min-width: 20px;
+  min-height: 20px;
+  text-align: center;
 }
 
 #grid{
-  background-color: #AA6644;
-  flex-grow: 4;
+  display:flex;
+  flex-direction: column;
+  background-color: #CCBB77;
+  /*flex-grow: 4;*/
+}
+
+#gridrow{
+  display:flex;
+  flex-direction: row; 
+  background-color: #CCBB77;
+  margin-bottom: 1px;
+}
+
+#gridelement{
+  border: 1px solid lightgray;
+  margin-left: 1px;
+  min-width: 20px;
+  min-height: 20px;
+  text-align: center;
 }

@@ -7,7 +7,7 @@ class Dataelement extends React.Component{
   render(){
     return(
       <div id='dataelement'>
-      Dataelement
+      2
       </div>
       )
   }

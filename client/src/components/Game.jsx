@@ -6,13 +6,18 @@ class Game extends React.Component{
 
  
 
+ componentDidMount() {
+  
+ }
+
   render(){
     return(
       <div id='game'>
-      <div id='colspacer'>colspacer</div>
+      <div id='colspacer'></div>
       <Column/>
       <Row/>
       <Grid/>
+
       </div>
       )
   }

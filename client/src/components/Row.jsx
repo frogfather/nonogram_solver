@@ -10,6 +10,14 @@ class Row extends React.Component{
       <Datarow/>
       <Datarow/>
       <Datarow/>
+      <Datarow/>
+      <Datarow/>
+      <Datarow/>
+      <Datarow/>
+      <Datarow/>
+      <Datarow/>
+      <Datarow/>
+      
       </div>
       )
   }
