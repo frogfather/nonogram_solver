@@ -1,31 +1,22 @@
 const React = require('react');
 import Gridrow from '../components/Gridrow'
-import Cells from '../models/Cells'
 
 class Grid extends React.Component{
 
-  constructor(){
-    super()
-
-    var testCells = new Cells();
-    this.state = {cells: testCells}
+  constructor(options){
+    super(options)
+    this.state = {rows: options.griddata, onclick: this.props.onclick}
   }
 
- 
-
   render(){
+
+    var options = this.state.rows.map(function(row,index){
+      return <Gridrow onclick={this.state.onclick} value={index} key={index} data={row}/>
+    }.bind(this))
+
     return(
       <div id='grid'>
-      <Gridrow cells= {this.state.cells}/>
-      <Gridrow cells= {this.state.cells}/>
-      <Gridrow cells= {this.state.cells}/>
-      <Gridrow cells= {this.state.cells}/>
-      <Gridrow cells= {this.state.cells}/>
-      <Gridrow cells= {this.state.cells}/>
-      <Gridrow cells= {this.state.cells}/>
-      <Gridrow cells= {this.state.cells}/>
-      <Gridrow cells= {this.state.cells}/>
-      <Gridrow cells= {this.state.cells}/>
+      {options}
       </div>
       )
   }

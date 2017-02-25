@@ -1,33 +1,26 @@
 import Cell from './Cell';
 
-var Cells = function(){
+var Cells = function(options){
+  var result = [];  
+  var length = options.columns;
+  var cell1;
 
-
-  var cell1 = new Cell({
+  for (var i=0; i<length; i++){
+      cell1 = new Cell({
       clueId: -1,
       autoValue: '',
-      displayValue: '',
+      displayValue: ' ',
       testValue1: '',
       testValue2: '',
       lastChanged: {
         time: Date.now(),
         user: 'new'
         }
-  });
+    });
+  result.push(cell1);    
+  }
   
-  var cell2 = new Cell({
-      clueId: -1,
-      autoValue: '',
-      displayValue: '',
-      testValue1: '',
-      testValue2: '',
-      lastChanged: {
-        time: Date.now(),
-        user: 'me',
-        }
-  });
- 
- return[cell1, cell2];
+ return result;
 }
 
 module.exports = Cells;

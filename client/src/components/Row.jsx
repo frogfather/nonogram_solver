@@ -2,22 +2,21 @@ const React = require('react');
 import Datarow from '../components/Datarow'
 class Row extends React.Component{
 
- 
-
+  constructor(options){
+  super(options)
+  this.state = {data: options.rowdata}
+  }
+   
   render(){
+
+    var options = this.state.data.map(function(rowdata,index){
+      return <Datarow value={index} key={index} data={rowdata}/>
+    }.bind(this))
+    
+
     return(
       <div id='row'>
-      <Datarow/>
-      <Datarow/>
-      <Datarow/>
-      <Datarow/>
-      <Datarow/>
-      <Datarow/>
-      <Datarow/>
-      <Datarow/>
-      <Datarow/>
-      <Datarow/>
-      
+      {options}   
       </div>
       )
   }
