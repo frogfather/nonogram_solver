@@ -6,18 +6,22 @@ body{
   font-family: Futura;
   height: 100%
   }
+#app{
+  height:100%;
+}
 
-#container{
-display: flex;
-justify-content: center;
-background-color: blue;
+#content{
+border: 1px solid red;
+min-height: 100%;
+vertical-align: middle;
 }
 
 #game{
 display:flex;  
 flex-wrap: wrap;
-background-color: pink;
-width:80%;
+border: 1px solid pink;
+width:50%;
+margin: 0 auto;
 }
 
 

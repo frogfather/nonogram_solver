@@ -1,10 +1,10 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import GameContainer from './containers/GameContainer';
+import Game from './containers/Game';
 
 window.onload = function(){
   ReactDOM.render(
-   <GameContainer/>,
+   <Game/>,
     document.getElementById('app')
   );
 }

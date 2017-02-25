@@ -5,7 +5,6 @@ class Gridrow extends React.Component{
   constructor(props){
     super()
     this.state = {cells: props.cells}
-    console.log(this.state)
   }
  
 

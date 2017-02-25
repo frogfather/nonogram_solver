@@ -5,7 +5,6 @@ class Gridelement extends React.Component{
  constructor(props){
    super()
    this.state = {cell: props.cell}
-   console.log(this.state)
   }
 
   render(){

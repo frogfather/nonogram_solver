@@ -7,7 +7,7 @@ var Cell = function(options){
   this.testValue2 = options.testValue2;
   this.lastChanged = {
     time: options.lastChanged.time,
-    by: options.lastChanged.by
+    user: options.lastChanged.user
     }
 };
 
@@ -15,7 +15,7 @@ Cell.prototype = {
 
   updateTimeStamp : function(user){
     this.lastChanged.time = Date.now;
-    this.lastChanged.by = user;
+    this.lastChanged.user = user;
   }
 
 };
