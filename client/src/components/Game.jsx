@@ -4,12 +4,6 @@ import Row from '../components/Row'
 import Grid from '../components/Grid'
 class Game extends React.Component{
 
- 
-
- componentDidMount() {
-  
- }
-
   render(){
     return(
       <div id='game'>

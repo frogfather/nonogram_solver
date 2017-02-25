@@ -2,12 +2,16 @@ const React = require('react');
 
 class Gridelement extends React.Component{
 
- 
+ constructor(props){
+   super()
+   this.state = {cell: props.cell}
+   console.log(this.state)
+  }
 
   render(){
     return(
       <div id='gridelement'>
-      X
+      {this.state.cell.displayValue}
       </div>
       )
   }

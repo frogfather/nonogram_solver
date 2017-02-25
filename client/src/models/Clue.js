@@ -3,3 +3,7 @@ var Clue = function(options){
   this.colour = options.colour;
   this.length = options.length;
 }
+
+Clue.prototype = {
+
+}
