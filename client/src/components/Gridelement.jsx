@@ -3,7 +3,21 @@ class Gridelement extends React.Component{
 
  constructor(props){
    super()
-   this.state = {cell: props.data, onclick: props.onclick, rowno: props.rowno, colno: props.value}
+   this.state = {cell: props.data, onclick: props.onclick, rowno: props.rowno, colno: props.value, cellId: props.rowno+':'+props.value}
+  }
+
+  componentDidMount(){
+    this.updateGridElement()
+  }
+
+  updateGridElement(){
+    const ctx = this.refs.canvas.getContext('2d');
+      ctx.strokeStyle = "red";
+      console.log(ctx)
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.lineTo(20,20);
+      ctx.stroke();
   }
 
   clickCell(event){
@@ -12,10 +26,11 @@ class Gridelement extends React.Component{
 
   render(){
     const divStyle = {backgroundColor: this.state.cell.colour}
+
     return(
-      <div className='gridelement' style={divStyle} onClick={this.clickCell.bind(this)}>
-      {this.state.cell.displayValue}
-      </div>
+      <canvas className='gridelement' ref='canvas' style={divStyle} onClick={this.clickCell.bind(this)}>
+  
+      </canvas>
       )
   }
 

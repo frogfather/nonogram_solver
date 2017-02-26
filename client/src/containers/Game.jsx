@@ -26,12 +26,12 @@ class Game extends React.Component{
   fillCells(data){
     if (data.length >0){
     for (var i=0; i< data.length; i++){
-      fillCell(data.row,data.col,data.fillPattern)
+      // fillCell(data.row,data.col,data.fillPattern)
       }
     }
   }
 
-  fillCell(row,col,fillPattern)
+
 
   render(){
     return(
