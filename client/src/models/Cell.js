@@ -2,10 +2,11 @@
 var Cell = function(options){
   this.clueId = options.clueId;
   this.autoValue = options.autoValue;
+  this.userValue = options.userValue;
   this.displayValue = options.displayValue;
   this.testValue1 = options.testValue1;
   this.testValue2 = options.testValue2;
-  this.colour = options.colour;
+  this.show = options.show;
   this.lastChanged = {
     time: options.lastChanged.time,
     user: options.lastChanged.user

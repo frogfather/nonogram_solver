@@ -3,7 +3,7 @@ class Gridelement extends React.Component{
 
  constructor(props){
    super()
-   this.state = {cell: props.data, onclick: props.onclick, rowno: props.rowno, colno: props.value, cellId: 'r'+props.rowno+'c'+props.value}
+   this.state = {cell: props.data, onclick: props.onclick, rowno: props.rowno, colno: props.value, show: props.show , cellId: 'r'+props.rowno+'c'+props.value}
   }
 
   componentDidMount(){
@@ -24,24 +24,41 @@ class Gridelement extends React.Component{
 
       //something weird here - why are these numbers so huge?
       //should be pixels?!
-      ctx.fillStyle = this.state.cell.colour;
+      var displaying;
+      // console.log(this.state.cell)
+      if (this.state.cell.show === 'auto'){
+        displaying = this.state.cell.autoValue
+        }else
+        {
+        displaying = this.state.cell.userValue  
+        }
+
+      if ((displaying === 'clear')||(displaying === "cross")){
+        ctx.fillStyle = 'gray';
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 20;
+        ctx.fillRect(0,0,280,200);
+        if(displaying === "cross"){
+        ctx.beginPath();
+        ctx.moveTo(30,30);
+        ctx.lineTo(270,140);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(270,30);
+        ctx.lineTo(30,140);
+        ctx.stroke();
+        }
+      }else 
+      {
+      ctx.fillStyle = displaying;
       ctx.strokeStyle = "black";
       ctx.lineWidth = 20;
       ctx.fillRect(0,0,280,200);
-      
-      if(this.state.cell.displayValue === "cross"){
-      ctx.beginPath();
-      ctx.moveTo(30,30);
-      ctx.lineTo(270,140);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(270,30);
-      ctx.lineTo(30,140);
-      ctx.stroke();
       }
 
-     
       
+      
+
   }
 
   clickCell(event){

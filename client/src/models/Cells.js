@@ -10,9 +10,10 @@ var Cells = function(options){
       clueId: -1,
       autoValue: 'clear',
       displayValue: 'clear',
+      userValue: 'clear',
       testValue1: 'clear',
       testValue2: 'clear',
-      colour: 'gray',
+      show: 'user',
       lastChanged: {
         time: Date.now(),
         user: 'new'

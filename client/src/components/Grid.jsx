@@ -5,7 +5,7 @@ class Grid extends React.Component{
 
   constructor(options){
     super(options)
-    this.state = {rows: options.griddata, onclick: this.props.onclick}
+    this.state = {rows: options.griddata, onclick: this.props.onclick, show: this.props.show}
   }
 
   render(){

@@ -8,14 +8,14 @@ class Sidebar extends React.Component{
 
   checkboxClick(event){
     event.persist()
-    console.log(event.target.checked);
     this.state.onclick(event)
   }
 
   render(){
     return(
       <div id='sidebar'>
-      <label><input type="checkbox" id="cbox1" value="crosscheckbox" onClick={this.checkboxClick.bind(this)}/>cross</label>
+      <label><input type="checkbox" id="ckcross" value="crosscheckbox" onClick={this.checkboxClick.bind(this)}/>cross</label>
+      <label><input type="checkbox" id="ckauto" value="autocheckbox" onClick={this.checkboxClick.bind(this)}/>auto</label>
       </div>
       )
   }
