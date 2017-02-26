@@ -8,10 +8,10 @@ var Cells = function(options){
   for (var i=0; i<length; i++){
       cell1 = new Cell({
       clueId: -1,
-      autoValue: '',
-      displayValue: '',
-      testValue1: '',
-      testValue2: '',
+      autoValue: 'clear',
+      displayValue: 'clear',
+      testValue1: 'clear',
+      testValue2: 'clear',
       colour: 'gray',
       lastChanged: {
         time: Date.now(),
