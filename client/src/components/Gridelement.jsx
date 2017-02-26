@@ -11,8 +11,9 @@ class Gridelement extends React.Component{
   }
 
   render(){
+    const divStyle = {backgroundColor: this.state.cell.colour}
     return(
-      <div className='gridelement' onClick={this.clickCell.bind(this)}>
+      <div className='gridelement' style={divStyle} onClick={this.clickCell.bind(this)}>
       {this.state.cell.displayValue}
       </div>
       )

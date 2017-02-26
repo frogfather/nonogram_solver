@@ -5,6 +5,7 @@ var Cell = function(options){
   this.displayValue = options.displayValue;
   this.testValue1 = options.testValue1;
   this.testValue2 = options.testValue2;
+  this.colour = options.colour;
   this.lastChanged = {
     time: options.lastChanged.time,
     user: options.lastChanged.user

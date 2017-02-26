@@ -9,9 +9,10 @@ var Cells = function(options){
       cell1 = new Cell({
       clueId: -1,
       autoValue: '',
-      displayValue: ' ',
+      displayValue: '',
       testValue1: '',
       testValue2: '',
+      colour: 'gray',
       lastChanged: {
         time: Date.now(),
         user: 'new'
@@ -21,6 +22,11 @@ var Cells = function(options){
   }
   
  return result;
+}
+
+Cells.prototype = {
+
+
 }
 
 module.exports = Cells;

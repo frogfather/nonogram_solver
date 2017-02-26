@@ -13,10 +13,25 @@ class Game extends React.Component{
     this.state = {rows:testGame.rows, cols:testGame.cols, grid:testGame.grid}
   }
 
-  gridClick(event){
-    // event.persist();
-    console.log(event);
+
+  gridClick(options){
+    //know col and row
+    var row = options.row;
+    var col = options.col;
+    // this is not correct because "this" here is from the grid element
+    this.state.grid[row][col].colour = 'blue';
+    this.forceUpdate();
   }
+
+  fillCells(data){
+    if (data.length >0){
+    for (var i=0; i< data.length; i++){
+      fillCell(data.row,data.col,data.fillPattern)
+      }
+    }
+  }
+
+  fillCell(row,col,fillPattern)
 
   render(){
     return(
@@ -25,7 +40,7 @@ class Game extends React.Component{
       <div id='colspacer'></div>
       <Column coldata={this.state.cols}/>
       <Row rowdata={this.state.rows}/>
-      <Grid onclick={this.gridClick} griddata={this.state.grid}/>
+      <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid}/>
       <Sidebar/>
       </div>
       </div>
