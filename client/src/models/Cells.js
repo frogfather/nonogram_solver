@@ -3,10 +3,13 @@ import Cell from './Cell';
 var Cells = function(options){
   var result = [];  
   var length = options.columns;
+  const row = options.row;
   var cell1;
 
   for (var i=0; i<length; i++){
       cell1 = new Cell({
+      cellRow: row,
+      cellCol: i,
       clueId: -1,
       autoValue: 'clear',
       displayValue: 'clear',

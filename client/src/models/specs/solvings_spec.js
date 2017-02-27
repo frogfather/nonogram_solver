@@ -52,8 +52,10 @@ describe('solvings', function () {
   });
 
   it('should return an array with the correct clue distribution', function () {
-    assert.deepEqual(Solvings.clueDistribution(spaces1,clues1,false),[{spacelength:5, clues: [0,1]},{spacelength:4, clues: [1]},{spacelength:4, clues: [2]}]);
+    assert.deepEqual(Solvings.clueDistribution(spaces1,clues1,false),[{spacelength:5, clues: [0,1]},{spacelength:4, clues: [1,2]},{spacelength:4, clues: [2]}]);
   });
+
+  
 
 
 })

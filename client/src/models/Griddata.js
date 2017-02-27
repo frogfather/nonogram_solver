@@ -6,7 +6,7 @@ var Griddata = function(options){
   var result = [];
   var row1;
   for (var i=0; i< rowcount; i++){
-    row1 = new Cells({columns:colcount})
+    row1 = new Cells({columns:colcount, row: i})
     result.push(row1);
   }
 

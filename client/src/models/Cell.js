@@ -1,5 +1,7 @@
 
 var Cell = function(options){
+  this.cellRow = options.cellRow;
+  this.cellCol = options.cellCol;
   this.clueId = options.clueId;
   this.autoValue = options.autoValue;
   this.userValue = options.userValue;

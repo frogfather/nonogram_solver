@@ -3,7 +3,7 @@ class Gridelement extends React.Component{
 
  constructor(props){
    super()
-   this.state = {cell: props.data, onclick: props.onclick, rowno: props.rowno, colno: props.value, show: props.show , cellId: 'r'+props.rowno+'c'+props.value}
+   this.state = {cell: props.data, onclick: props.onclick, rowno: props.data.cellRow, colno: props.data.cellCol, show: props.show , cellId: 'r'+props.data.cellRow+'c'+props.data.cellCol}
   }
 
   componentDidMount(){

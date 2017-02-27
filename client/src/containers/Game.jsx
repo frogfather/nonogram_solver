@@ -7,6 +7,7 @@ import Gamedata from '../models/Gamedata'
 import solvings from '../models/solvings'
 
 class Game extends React.Component{
+
   constructor(options){
     super(options)
     var game = new Gamedata();
@@ -22,9 +23,11 @@ class Game extends React.Component{
     this.updateCells([{row: row, col: col, fillPattern: this.state.selected, auto:false, toggle:true}]);
     }
     // solvings.overlap({cells: this.state.grid[3], clues: this.state.rows[3],colour:false,row:true })
-   var spaces1 = [{spacelength:5, clues: []},{spacelength:4, clues: []},{spacelength:4, clues: []}];
-   var clues1 = [{id:1, colour:'black', number:3},{id:2, colour:'black', number:1},{id:3, colour:'black', number:4}]
-    solvings.clueDistribution(spaces1,clues1,false)
+   // var spaces1 = [{spacelength:5, clues: []},{spacelength:4, clues: []},{spacelength:4, clues: []}];
+   // var clues1 = [{id:1, colour:'black', number:3},{id:2, colour:'black', number:1},{id:3, colour:'black', number:4}]
+   //  solvings.overlap({cells: [{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'cross'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'cross'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'}], clues: clues1, colour:false})
+   //console.log(this.state.grid)
+   solvings.overlap({cells: this.state.grid[4], clues: this.state.rows[4], colour: false, row: true})
   }
 
   checkClick(event){
@@ -55,7 +58,6 @@ class Game extends React.Component{
 
 
   updateCells(options){
-    console.log('update cells')
     if (options.length >0){
     for (var i=0; i< options.length; i++){
       var data = options[i];
