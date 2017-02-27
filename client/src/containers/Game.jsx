@@ -5,6 +5,7 @@ import Grid from '../components/Grid'
 import Sidebar from '../components/Sidebar'
 import Solvings from '../models/Solvings'
 import Gamedata from '../models/Gamedata'
+import solvings from '../models/solvings'
 
 class Game extends React.Component{
   constructor(options){
@@ -20,7 +21,8 @@ class Game extends React.Component{
     var col = options.col;
     // this is not correct because "this" here is from the grid element    
     this.updateCells([{row: row, col: col, fillPattern: this.state.selected, auto:false, toggle:true}]);
-  }
+    }
+    solvings.overlap({cells: this.state.grid[3], clues: this.state.rows[3],colour:false,row:true })
   }
 
   checkClick(event){
