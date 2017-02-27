@@ -73,8 +73,29 @@ overlap: function(data){
     }
   //eliminate clues that appear in more than one space
   //the ones that can only appear in a given space need
-  //to be checked for fit 
-  }
+  //to be checked for fit
+  var count; 
+  var index;
+  for (var i=0;i<clues.length;i++){
+      //does this clue appear in more than one space?
+      count = 0;
+      for (var j = 0; j < spaces.length; j++){
+        if (spaces[j].clues.indexOf(i) > -1){
+          count +=1;
+          }
+        }
+      if (count > 1){
+        //remove all instances of that clue from spaces
+      for (var j = 0; j < spaces.length; j++){
+        index = spaces[j].clues.indexOf(i); 
+          if (index>-1){
+          spaces[j].clues.splice(index,1)}
+          }
+        }  
+      }
+
+
+    }
   
   }
 }

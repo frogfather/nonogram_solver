@@ -3,7 +3,6 @@ import Column from '../components/Column'
 import Row from '../components/Row'
 import Grid from '../components/Grid'
 import Sidebar from '../components/Sidebar'
-import Solvings from '../models/Solvings'
 import Gamedata from '../models/Gamedata'
 import solvings from '../models/solvings'
 
