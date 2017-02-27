@@ -31,7 +31,8 @@ describe('solvings', function () {
       cells: ['clear','clear','clear','clear','black','clear','clear','black','black','clear','cross','clear','clear','clear','clear'],
       clues: [2,6,1]
     };
-
+    spaces1 = [{spacelength:5, clues: []},{spacelength:4, clues: []},{spacelength:4, clues: []}];
+    clues1 = [{id:1, colour:'black', number:3},{id:2, colour:'black', number:1},{id:3, colour:'black', number:4}]
   });
 
   it('should return 5 as playable length', function () {
@@ -48,6 +49,10 @@ describe('solvings', function () {
 
   it('should return 15 as playable length', function () {
     assert.equal(Solvings.getPlayable(data4.cells).length,15);
+  });
+
+  it('should return an array with the correct clue distribution', function () {
+    assert.deepEqual(Solvings.clueDistribution(spaces1,clues1,false),[{spacelength:5, clues: [0,1]},{spacelength:4, clues: [1]},{spacelength:4, clues: [2]}]);
   });
 
 
