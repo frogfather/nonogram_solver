@@ -10,12 +10,11 @@ var Cells = function(options){
       cell1 = new Cell({
       cellRow: row,
       cellCol: i,
-      clueId: -1,
       autoValue: 'clear',
-      displayValue: 'clear',
       userValue: 'clear',
-      testValue1: 'clear',
-      testValue2: 'clear',
+      testValue1: -1,
+      testValue2: -1,
+      testColour: 'clear',
       show: 'user',
       lastChanged: {
         time: Date.now(),

@@ -22,17 +22,13 @@ class Game extends React.Component{
     // this is not correct because "this" here is from the grid element    
     this.updateCells([{row: row, col: col, fillPattern: this.state.selected, auto:false, toggle:true}]);
     }
-    // solvings.overlap({cells: this.state.grid[3], clues: this.state.rows[3],colour:false,row:true })
-   // var spaces1 = [{spacelength:5, clues: []},{spacelength:4, clues: []},{spacelength:4, clues: []}];
-   // var clues1 = [{id:1, colour:'black', number:3},{id:2, colour:'black', number:1},{id:3, colour:'black', number:4}]
-   //  solvings.overlap({cells: [{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'cross'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'cross'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'}], clues: clues1, colour:false})
-   //console.log(this.state.grid)
-   solvings.overlap({cells: this.state.grid[4], clues: this.state.rows[4], colour: false, row: true})
+    
   }
 
   checkClick(event){
     var ischecked = event.target.checked;
     if (event.target.id === 'ckcross'){
+      console.log(this.state.grid)
       if (ischecked){
         this.state.selected = 'cross';
         }else
@@ -56,9 +52,79 @@ class Game extends React.Component{
       }
     }
 
+  singleClue(){
+  //if the row isn't empty and there's only one clue we should be able to cross out some cells
+  var updateData;
+  for (var row = 0; row< this.state.rows.length;row++){
+    if (this.state.rows[row].length ===1){
+  console.log(row)
+   updateData =  solvings.singleClue({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
+    this.updateCells(updateData)
+    }
+  }
+    
+    var column;
+    for (var col = 0; col< this.state.cols.length;col++){
+      if (this.state.cols[col].length ===1){
+      console.log(col);  
+      column = [];
+      for (var row = 0; row < this.state.rows.length; row++){
+        column.push(this.state.grid[row][col]);
+      }
+    updateData = solvings.singleClue({cells: column, clues: this.state.cols[col], colour: false, row: false})
+    this.updateCells(updateData)
+      }
+    }
+  return updateData;  
+  }
+
+  edgeProximity(){
+    var updateData;
+    for (var row = 0; row< this.state.rows.length;row++){
+     updateData =  solvings.edgeProximity({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
+      this.updateCells(updateData)
+    }
+    var column;
+    for (var col = 0; col< this.state.cols.length;col++){
+      column = [];
+      for (var row = 0; row < this.state.rows.length; row++){
+        column.push(this.state.grid[row][col]);
+      }
+    updateData = solvings.edgeProximity({cells: column, clues: this.state.cols[col], colour: false, row: false})
+    this.updateCells(updateData)
+    
+  }
+}
+
+  generalOverlap(){
+    var updateData;
+    for (var row = 0; row< this.state.rows.length;row++){
+     updateData =  solvings.overlap({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
+      this.updateCells(updateData)
+    }
+    var column;
+    for (var col = 0; col< this.state.cols.length;col++){
+      column = [];
+      for (var row = 0; row < this.state.rows.length; row++){
+        column.push(this.state.grid[row][col]);
+      }
+    updateData = solvings.overlap({cells: column, clues: this.state.cols[col], colour: false, row: false})
+    this.updateCells(updateData)
+    }
+  }
+
+  solveThePuzzle(){
+    this.generalOverlap();
+    this.edgeProximity();
+    this.singleClue();
+  }
+
+  buttonClick(event){
+   this.solveThePuzzle();
+  }
 
   updateCells(options){
-    if (options.length >0){
+    if (options){
     for (var i=0; i< options.length; i++){
       var data = options[i];
         if (data.auto){
@@ -77,7 +143,8 @@ class Game extends React.Component{
         } 
       }
     }  
-  this.forceUpdate();  
+  this.forceUpdate();
+  //should return free cell count  
   }
 
 
@@ -90,7 +157,7 @@ class Game extends React.Component{
       <Column coldata={this.state.cols}/>
       <Row rowdata={this.state.rows}/>
       <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid} show= {this.state.show}/>
-      <Sidebar onclick={this.checkClick.bind(this)}/>
+      <Sidebar onclick={this.checkClick.bind(this)} onbutton={this.buttonClick.bind(this)}/>
       </div>
       </div>
       )

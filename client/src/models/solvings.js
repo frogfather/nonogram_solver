@@ -111,11 +111,58 @@ clueDistribution: function(spaces,clues,colour){
  return spaces; 
 },
 
+singleClue: function(data){
+  
+},
+
+edgeProximity: function(data){
+  var results = [];
+  var updateInfo = {};
+  var cells = data.cells;
+  var cellValues = cells.map(function(cell){
+    return cell.autoValue;
+  });
+
+  var firstFilled = cellValues.findIndex(function(currentValue){
+    return ((currentValue != 'cross')&&(currentValue !='clear'))    
+  })
+  if (firstFilled > -1){ //no point doing anything if row is clear or full of crosses
+  
+  var lastFilled = cellValues.length-1;
+  while ((cellValues[lastFilled] ==='clear')||(cellValues[lastFilled]==='cross')){
+    lastFilled -= 1 ;
+    };
+  var firstClue = data.clues[0]; 
+  var lastClue = data.clues[data.clues.length-1];
+  if (firstFilled < firstClue.number){
+    //fill in all cells from firstFilled to firstClue
+    for (var i=firstFilled+1;i< firstClue.number; i++){
+    updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false}
+      results.push(updateInfo);
+      }
+    }
+  if (cells.length - lastFilled < lastClue.length){
+    for (var i=cells.length-lastClue.number; i< lastFilled; i++){
+    updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false}
+      results.push(updateInfo);
+      }
+    }  
+  }
+return results;  
+},
+
 overlap: function(data){
-  var result = [];
+  var results = [];
   var cells = data.cells;
   var clues = data.clues;
   var playable = this.getPlayable(cells);
+ 
+  for (var i=0; i< data.cells.length; i++){
+    cells[i].testValue1 = -1;
+    cells[i].testValue2 = -1;
+    cells[i].testColour = 'clear';
+  }    
+ 
   if (clues.length > 0){
   // occasionally you get rows with no clues at all!
   var spaces = this.getDistinctSpaces(playable);
@@ -144,8 +191,6 @@ overlap: function(data){
     var offset=0;
     var startpoint=0;
     var endpoint=0;
-    var testArrayLeft = [];
-    var testArrayRight = [];
     var totalLength;
     var clueLengths;
     var selectedClues;
@@ -162,7 +207,6 @@ overlap: function(data){
       selectedClues = spaces[space].clues.map(function(item){
           return myClues[item];
         }.bind(this));
-
         if (clueLengths.length > 0){
         totalLength = clueLengths.reduce(function(total,item,index){
           if ((total > 0)&&(!data.colour)){
@@ -170,37 +214,43 @@ overlap: function(data){
           }else {return total + item};
         });
       }else totalLength = 0;
-        
+
         if (totalLength > (spaces[space].spacelength)/2){
           offset = spaces[space].spacelength - totalLength;
-          testArrayLeft.length = spaces[space].spacelength;
-          testArrayRight.length = spaces[space].spacelength;
-          testArrayLeft.fill('clear');
-          testArrayRight.fill('clear');
-          //the two test arrays will just be values - clear, cross or colour
-          //selectedclues.number
           for (var i=0;i<selectedClues.length;i++){
+
             endpoint += selectedClues[i].number;
-            console.log(startpoint)
-            console.log(endpoint)
+            
             for (var j=startpoint; j<endpoint;j++){
-                testArrayLeft[j] = selectedClues[i].colour;
-                testArrayRight[j+offset] = selectedClues[i].colour;
+                cells[j].testValue1 = i;
+                cells[j].testColour = selectedClues[i].colour;
+                cells[j+offset].testColour = selectedClues[i].colour;
+                cells[j+offset].testValue2 = i;
+                
               }
             startpoint = endpoint;
             if ((i<selectedClues.length-1)&&(!data.colour)){
-              testArrayLeft[startpoint] = 'cross';
-              testArrayRight[startpoint+offset] = 'cross'
+              cells[startpoint].testValue1 = -1;
+              cells[startpoint].testColour = 'cross';
+              cells[startpoint + offset].testValue2 = -1;
               startpoint +=1;
               endpoint+=1;
               }  
             }
-          console.log(testArrayLeft)
-          console.log(testArrayRight)  
+          //now see which cells have both testValues the same
+          var updateInfo = {};
+          for (var i=0; i< cells.length;i++){
+            if ((cells[i].testValue1 > -1)&&(cells[i].testValue1 === cells[i].testValue2)){
+            updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: cells[i].testColour, auto:true, toggle:false}
+              results.push(updateInfo);
+              }
+
+            } 
+
           }
       }
     }
-  
+  return results;
   }
 }
 

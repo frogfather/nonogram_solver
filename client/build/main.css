@@ -38,6 +38,7 @@ width: 80%;
 
 #sidebar{
 display:flex;
+flex-direction: column;
 background-color: gray;
 flex-grow: 1;
 }
