@@ -53,6 +53,24 @@ class Game extends React.Component{
       }
     }
 
+ identifyBlocks(){
+ var cellsFilled = 0;
+ var updateData;
+ for (var row = 0; row< this.state.rows.length; row++){
+  updateData = solvings.identifyBlocks({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
+   this.updateCells(updateData)
+ }
+   var column;
+   for (var col = 0; col< this.state.cols.length;col++){
+     column = [];
+     for (var row = 0; row < this.state.rows.length; row++){
+       column.push(this.state.grid[row][col]);
+     }
+   updateData = solvings.identifyBlocks({cells: column, clues: this.state.cols[col], colour: false, row: false})
+  cellsFilled += this.updateCells(updateData)
+   }  
+ return cellsFilled;  
+ }
   singleClue(){
   //if the row isn't empty and there's only one clue we should be able to cross out some cells
   var cellsFilled = 0;
@@ -133,6 +151,9 @@ class Game extends React.Component{
     console.log('Edge proximity solved '+solved);
     totalSolved += solved;
     solved = this.singleClue();
+    console.log('Single clue solved '+solved);
+    totalSolved += solved;
+    solved = this.identifyBlocks();
     console.log('Single clue solved '+solved);
     totalSolved += solved;
     if (totalSolved === 0){noneSolved = true}  

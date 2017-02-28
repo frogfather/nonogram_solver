@@ -113,6 +113,40 @@ clueDistribution: function(spaces,clues,colour){
  return spaces; 
 },
 
+identifyBlocks: function(data){
+var results = [];
+console.log('identifyBlocks')
+//can we work out what clues the existing blocks are part of?
+var cells = data.cells;
+var cellValues = cells.map(function(cell){
+  return cell.autoValue;
+});
+console.log(cellValues)
+var firstFilled = cellValues.findIndex(function(currentValue){
+  return ((currentValue != 'cross')&&(currentValue != 'clear'))    
+});
+console.log(firstFilled)
+if (firstFilled > -1){
+  var clues = data.clues;
+  var blockValues = [];
+  var blockLength = 0;
+  var blockData = {};
+  var blockInfo = []
+  for (var i = 0; i < cellValues.length; i++){
+    if ((cellValues[i] != 'cross')&&(cellValues[i] != 'clear')){
+      blockLength += 1;
+    }else{
+      if (blockLength > 0){
+        blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: cellValues[i]};
+        blockInfo.push(blockData)
+      blockLength = 0;  
+      }
+    }
+  }
+console.log(blockInfo)
+}
+return results;
+},
 
 singleClue: function(data){
 //find the position of first and last filled cells
