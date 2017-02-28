@@ -8,9 +8,9 @@ var Cell = function(options){
   this.testValue2 = options.testValue2;
   this.testColour = options.testColour;
   this.show = options.show;
-  this.lastChanged = {
-    time: options.lastChanged.time,
-    user: options.lastChanged.user
+  this.lastchanged = {
+    time: options.lastchanged.time,
+    user: options.lastchanged.user
     }
 };
 

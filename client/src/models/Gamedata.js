@@ -7,7 +7,6 @@ var Gamedata = function(){
   var rows = new Rows();
   var cols = new Cols();
   var griddata = new Griddata({rows:15, cols:20});
-
   this.name = 'test puzzle';
   this.colours = [];
   this.rows = rows;

@@ -79,31 +79,34 @@ clueDistribution: function(spaces,clues,colour){
       return total+num;
       })}
     else{nextSpace = 0;}
+
     for (var startPos = 0; startPos < clues.length;startPos++){
       if (startPos > 0){
          prevData = clueArray.slice(0,startPos).reduce(function(total,num,index){
-           if ((index > 0)&&(!colour)){return total + num +1}else{return total + num}
+          return total + num
          });
         }else
         {prevData = 0;}
       currData = 0;
       for (var clue = startPos; clue < clueArray.length; clue++){
-          currArray =clueArray.map(function(clue,index){
+          
+          currArray = clueArray.map(function(clue,index){
             return index;
           }).slice(startPos,clue+1); 
 
           currData = clueArray.slice(startPos,clue+1).reduce(function(total,num,index){
             if ((index > 0)&&(!colour)){return total + num +1}else{return total + num}
           });
+
         if (clue < clueArray.length-1){
-         nextData = clueArray.slice(clue+1,clueArray.length).reduce(function(total,num,index){
-            if ((index > 0)&&(!colour)){return total + num +1}else{return total + num}
+         nextData = clueArray.slice(clue+1,clueArray.length).reduce(function(total,num,index){return total + num
           });}else {nextData = 0}
+
       if ((currData <= currSpace)
         &&(nextSpace >= nextData)
         &&(prevSpace >= prevData)){
         for (var i = 0 ; i< currArray.length;i++){
-        if ( spaces[space].clues.indexOf(currArray[i]) === -1){  
+        if ( spaces[space].clues.indexOf(currArray[i]) === -1){ 
         spaces[space].clues.push(currArray[i]);}
         }
       }  
@@ -115,24 +118,29 @@ clueDistribution: function(spaces,clues,colour){
 
 identifyBlocks: function(data){
 var results = [];
-console.log('identifyBlocks')
+var updateInfo = {};
 //can we work out what clues the existing blocks are part of?
 var cells = data.cells;
 var cellValues = cells.map(function(cell){
   return cell.autoValue;
 });
-console.log(cellValues)
 var firstFilled = cellValues.findIndex(function(currentValue){
   return ((currentValue != 'cross')&&(currentValue != 'clear'))    
 });
-console.log(firstFilled)
-if (firstFilled > -1){
+var unfilled = cellValues.findIndex(function(currentValue){
+  return (currentValue === 'clear')    
+});
+if ((firstFilled > -1)&&(unfilled > -1)){
   var clues = data.clues;
+  var clueValues = clues.map(function(clue){
+    return clue.number;
+  });
   var blockValues = [];
   var blockLength = 0;
   var blockData = {};
   var blockInfo = []
   for (var i = 0; i < cellValues.length; i++){
+
     if ((cellValues[i] != 'cross')&&(cellValues[i] != 'clear')){
       blockLength += 1;
     }else{
@@ -143,7 +151,33 @@ if (firstFilled > -1){
       }
     }
   }
-console.log(blockInfo)
+
+if (!data.colour){  
+var largestClue = clueValues.sort()[clueValues.length-1];
+
+var largestBlockSize = blockInfo.map(function(block){
+  return block.blocklength}).sort()[blockInfo.length-1];
+
+var largestBlock = blockInfo[blockInfo.findIndex(function(block){
+  return block.blocklength === largestBlockSize})];
+
+  if (largestBlockSize === largestClue){
+    //cross at either end
+    var crossPos = largestBlock.blockstart-1 
+    if ((crossPos >= 0)&&(cells[crossPos].autoValue != 'cross')){
+      updateInfo= {row: cells[crossPos].cellRow, col: cells[crossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false}
+        results.push(updateInfo);
+      }
+    crossPos = largestBlock.blockstart+largestBlock.blocklength;
+    if  ((crossPos < cells.length)&&(cells[crossPos].autoValue != 'cross')){
+      updateInfo= {row: cells[crossPos].cellRow, col: cells[crossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false}
+        results.push(updateInfo);
+      } 
+    }
+  }
+// if we have more blocks than clues then see if some can be joined 
+//together
+
 }
 return results;
 },
@@ -225,7 +259,7 @@ overlap: function(data){
   var clues = data.clues;
   var playable = this.getPlayable(cells);
   var updateInfo = {};
- 
+  
   for (var i=0; i< data.cells.length; i++){
     cells[i].testValue1 = -1;
     cells[i].testValue2 = -1;
@@ -238,6 +272,9 @@ overlap: function(data){
   this.clueDistribution(spaces,clues,data.colour);
   //any spaces with no clues in can be filled in since nothing can go there
 
+  var cellValues = cells.map(function(cell){
+    return cell.autoValue;
+  })
 
   for (var i=0; i< spaces.length; i++){
     if(spaces[i].clues.length === 0){
@@ -251,6 +288,7 @@ overlap: function(data){
       } 
     }
   }
+
   var count; 
   var index;
   for (var i=0;i<clues.length;i++){

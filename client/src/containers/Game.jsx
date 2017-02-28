@@ -154,9 +154,9 @@ class Game extends React.Component{
     console.log('Single clue solved '+solved);
     totalSolved += solved;
     solved = this.identifyBlocks();
-    console.log('Single clue solved '+solved);
+    console.log('Identify blocks solved '+solved);
     totalSolved += solved;
-    if (totalSolved === 0){noneSolved = true}  
+    if ((totalSolved === 0)||(pass === 10)){noneSolved = true}  
     console.log('total solved :'+totalSolved)  
      }
   }

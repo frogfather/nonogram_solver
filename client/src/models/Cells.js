@@ -16,7 +16,7 @@ var Cells = function(options){
       testValue2: -1,
       testColour: 'clear',
       show: 'user',
-      lastChanged: {
+      lastchanged: {
         time: Date.now(),
         user: 'new'
         }
