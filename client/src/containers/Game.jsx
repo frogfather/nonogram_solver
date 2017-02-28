@@ -11,7 +11,8 @@ class Game extends React.Component{
   constructor(options){
     super(options)
     var game = new Gamedata();
-    this.state = {rows:game.rows, cols:game.cols, grid:game.grid, show:'user', selected: 'blue'}
+    var gameSize = game.grid[0].length * game.grid.length
+    this.state = {rows:game.rows, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize}
   }
 
 
@@ -54,6 +55,7 @@ class Game extends React.Component{
 
   singleClue(){
   //if the row isn't empty and there's only one clue we should be able to cross out some cells
+  var cellsFilled = 0;
   var updateData;
   for (var row = 0; row< this.state.rows.length; row++){
     if (this.state.rows[row].length ===1){
@@ -70,16 +72,18 @@ class Game extends React.Component{
         column.push(this.state.grid[row][col]);
       }
     updateData = solvings.singleClue({cells: column, clues: this.state.cols[col], colour: false, row: false})
-    this.updateCells(updateData)
+   cellsFilled += this.updateCells(updateData)
       }
     }  
+  return cellsFilled;  
   }
 
   edgeProximity(){
+    var cellsFilled =0;
     var updateData;
     for (var row = 0; row< this.state.rows.length;row++){
      updateData =  solvings.edgeProximity({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
-      this.updateCells(updateData)
+     cellsFilled += this.updateCells(updateData)
     }
     var column;
     for (var col = 0; col< this.state.cols.length;col++){
@@ -88,12 +92,13 @@ class Game extends React.Component{
         column.push(this.state.grid[row][col]);
       }
     updateData = solvings.edgeProximity({cells: column, clues: this.state.cols[col], colour: false, row: false})
-    this.updateCells(updateData)
-    
+    cellsFilled += this.updateCells(updateData)
   }
+  return cellsFilled;
 }
 
   generalOverlap(){
+    var cellsFilled = 0;
     var updateData;
     for (var row = 0; row< this.state.rows.length;row++){
      updateData =  solvings.overlap({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
@@ -106,14 +111,33 @@ class Game extends React.Component{
         column.push(this.state.grid[row][col]);
       }
     updateData = solvings.overlap({cells: column, clues: this.state.cols[col], colour: false, row: false})
-    this.updateCells(updateData)
+    cellsFilled += this.updateCells(updateData)
     }
+  return cellsFilled;  
   }
 
   solveThePuzzle(){
-    this.generalOverlap();
-    this.edgeProximity();
-    this.singleClue();
+  var totalSolved;
+  var solved;
+  var noneSolved = false;
+  var pass = 0;
+    while (!noneSolved){
+    pass +=1;
+    console.log('pass: '+pass)
+    totalSolved = 0;
+    solved = 0;
+    solved = this.generalOverlap();
+    console.log('General overlap solved '+solved);
+    totalSolved += solved;
+    solved = this.edgeProximity();
+    console.log('Edge proximity solved '+solved);
+    totalSolved += solved;
+    solved = this.singleClue();
+    console.log('Single clue solved '+solved);
+    totalSolved += solved;
+    if (totalSolved === 0){noneSolved = true}  
+    console.log('total solved :'+totalSolved)  
+     }
   }
 
   buttonClick(event){
@@ -122,26 +146,35 @@ class Game extends React.Component{
 
   updateCells(options){
     if (options){
+
+    var uSolved = 0;
+    var aSolved = 0;
     for (var i=0; i< options.length; i++){
       var data = options[i];
         if (data.auto){
         if ((data.toggle)&&(this.state.grid[data.row][data.col].autoValue ===data.fillPattern)){
+        aSolved -=1;  
         this.state.grid[data.row][data.col].autoValue ='clear'  
         } 
         else {
+        aSolved += 1;
         this.state.grid[data.row][data.col].autoValue = data.fillPattern;
           }
         } else {
           if ((data.toggle)&&(this.state.grid[data.row][data.col].userValue === data.fillPattern)){
+          uSolved -= 1;  
           this.state.grid[data.row][data.col].userValue = 'clear';
           }else{
+          uSolved += 1;  
           this.state.grid[data.row][data.col].userValue = data.fillPattern;
           }
-        } 
+        }   
       }
     }  
   this.forceUpdate();
-  //should return free cell count  
+  this.state.aremaining -= aSolved;
+  this.state.uremaining -= uSolved;
+  return aSolved+uSolved; //calling function will know which
   }
 
 
