@@ -112,7 +112,33 @@ clueDistribution: function(spaces,clues,colour){
 },
 
 singleClue: function(data){
-  
+//find the position of first and last filled cells
+var results = [];
+var updateInfo = {};
+var clue = data.clues[0]; 
+var cells = data.cells;
+var cellValues = cells.map(function(cell){
+  return cell.autoValue;
+});
+var firstFilled = cellValues.findIndex(function(currentValue){
+  return ((currentValue != 'cross')&&(currentValue !='clear'))    
+});
+if (firstFilled > -1){
+var lastFilled = cellValues.length-1;
+while ((cellValues[lastFilled] ==='clear')||(cellValues[lastFilled]==='cross')){
+  lastFilled -= 1 ;
+  };
+// squares after firstFilled + cluelength -1  must be crossed
+//squares before lastFilled - cluelength +1 must be crossed
+for (var i=0; i< cells.length; i++){
+  if ((i<(lastFilled - clue.number+1))||(i>(firstFilled+clue.number -1))){
+    updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: 'cross', auto:true, toggle:false}
+      results.push(updateInfo);
+    }
+  }
+}
+console.log(results)  
+return results;  
 },
 
 edgeProximity: function(data){
@@ -122,7 +148,7 @@ edgeProximity: function(data){
   var cellValues = cells.map(function(cell){
     return cell.autoValue;
   });
-
+  //firstFilled and last filled should be separate function
   var firstFilled = cellValues.findIndex(function(currentValue){
     return ((currentValue != 'cross')&&(currentValue !='clear'))    
   })

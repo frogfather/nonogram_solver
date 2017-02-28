@@ -55,18 +55,16 @@ class Game extends React.Component{
   singleClue(){
   //if the row isn't empty and there's only one clue we should be able to cross out some cells
   var updateData;
-  for (var row = 0; row< this.state.rows.length;row++){
+  for (var row = 0; row< this.state.rows.length; row++){
     if (this.state.rows[row].length ===1){
-  console.log(row)
-   updateData =  solvings.singleClue({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
+   updateData = solvings.singleClue({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
     this.updateCells(updateData)
     }
   }
     
     var column;
     for (var col = 0; col< this.state.cols.length;col++){
-      if (this.state.cols[col].length ===1){
-      console.log(col);  
+      if (this.state.cols[col].length ===1){  
       column = [];
       for (var row = 0; row < this.state.rows.length; row++){
         column.push(this.state.grid[row][col]);
@@ -74,8 +72,7 @@ class Game extends React.Component{
     updateData = solvings.singleClue({cells: column, clues: this.state.cols[col], colour: false, row: false})
     this.updateCells(updateData)
       }
-    }
-  return updateData;  
+    }  
   }
 
   edgeProximity(){
