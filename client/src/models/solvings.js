@@ -121,6 +121,9 @@ var results = [];
 var updateInfo = {};
 //can we work out what clues the existing blocks are part of?
 var cells = data.cells;
+// console.log('cells.length'+cells.length)
+var playable = this.getPlayable(cells);
+// console.log('playable.length'+playable.length)
 var cellValues = cells.map(function(cell){
   return cell.autoValue;
 });
@@ -145,14 +148,22 @@ if ((firstFilled > -1)&&(unfilled > -1)){
       blockLength += 1;
     }else{
       if (blockLength > 0){
-        blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: cellValues[i]};
+        blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: cellValues[i-1]};
         blockInfo.push(blockData)
       blockLength = 0;  
       }
     }
   }
+  if (blockLength > 0){
+    blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: cellValues[i-1]};
+    blockInfo.push(blockData)
+  blockLength = 0;  
+  }
 
-if (!data.colour){  
+// if the largest block === the largest clue we can put crosses at
+// either end
+if (!data.colour){
+
 var largestClue = clueValues.sort()[clueValues.length-1];
 
 var largestBlockSize = blockInfo.map(function(block){
@@ -162,22 +173,89 @@ var largestBlock = blockInfo[blockInfo.findIndex(function(block){
   return block.blocklength === largestBlockSize})];
 
   if (largestBlockSize === largestClue){
-    //cross at either end
+
     var crossPos = largestBlock.blockstart-1 
     if ((crossPos >= 0)&&(cells[crossPos].autoValue != 'cross')){
+      console.log('updating with cross'+crossPos)
       updateInfo= {row: cells[crossPos].cellRow, col: cells[crossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false}
         results.push(updateInfo);
       }
     crossPos = largestBlock.blockstart+largestBlock.blocklength;
     if  ((crossPos < cells.length)&&(cells[crossPos].autoValue != 'cross')){
+      console.log('updating with cross'+crossPos)
       updateInfo= {row: cells[crossPos].cellRow, col: cells[crossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false}
         results.push(updateInfo);
       } 
     }
   }
+
+// blocks at start and end can be identified
+var startingBlock = blockInfo.findIndex(function(block){
+  return block.blockstart === 0});
+var firstClue = clues[0];
+if (startingBlock > -1){
+for (var i=0; i< firstClue.number;i++){
+  if (cells[i].autoValue != firstClue.colour){
+    console.log('updating with block colour'+i)
+    updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false}
+      results.push(updateInfo);
+    }
+  }
+//add cross after the block
+if (cells[firstClue.number+1].autoValue != 'cross'){
+  console.log('updating with cross'+firstClue.number+1)
+  updateInfo= {row: cells[firstClue.number+1].cellRow, col: cells[firstClue.number+1].cellCol, fillPattern: 'cross', auto:true, toggle:false}
+    results.push(updateInfo);
+  }
+
+}
+
+var endingBlock = blockInfo.findIndex(function(block){
+  return block.blockstart+block.blocklength === cells.length});
+var lastClue = clues[clues.length -1];
+if (endingBlock > -1){
+for (var i=blockInfo[endingBlock].blockstart; i>= cells.length-lastClue.number;i--){
+  if (cells[i].autoValue != lastClue.colour){
+    console.log('updating with block colour'+i)
+    updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: lastClue.colour, auto:true, toggle:false}
+      results.push(updateInfo);
+    }
+  }
+//and put a cross before the block
+if (cells[cells.length-lastClue.number-1].autoValue != 'cross'){
+  console.log('update with cross')
+  console.log(cells.length-lastClue.number-1)
+  updateInfo= {row: cells[cells.length-lastClue.number-1].cellRow, col: cells[cells.length-lastClue.number-1].cellCol, fillPattern: 'cross', auto:true, toggle:false}
+    results.push(updateInfo);
+  }
+
+}
+if (blockInfo.length > 0){
+var firstBlock = blockInfo[0];
+console.log('first block is '+firstBlock.blockstart)
+if (firstBlock.blockstart === firstClue.number){
+  console.log('block near edge')
+  var startPoint = firstBlock.blockstart - firstClue.number;
+  console.log(startPoint);
+  var endPoint = (startPoint+firstBlock.blocklength)
+  console.log(endPoint)
+  for (var i= startPoint; i < endPoint; i++){
+    if (cells[i].autoValue != 'cross'){
+      console.log('update with cross'+i)
+      updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: 'cross', auto:true, toggle:false}
+        results.push(updateInfo);
+      }
+    }
+  }
+}
+
+// if the start position and the clue length are the same, the space
+// at (startpoint - cluelength) to (endpoint - cluelength) must be crossed
+
 // if we have more blocks than clues then see if some can be joined 
 //together
 
+//for a given block list possibilities for which clue it is.
 }
 return results;
 },
@@ -204,6 +282,7 @@ while ((cellValues[lastFilled] ==='clear')||(cellValues[lastFilled]==='cross')){
 for (var i=0; i< cells.length; i++){
   if ((i<(lastFilled - clue.number+1))||(i>(firstFilled+clue.number -1))){
     if (cells[i].autoValue !='cross'){
+      console.log('single clue updating with cross '+i)
     updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: 'cross', auto:true, toggle:false}
       results.push(updateInfo);
     };
@@ -236,6 +315,7 @@ edgeProximity: function(data){
     //fill in all cells from firstFilled to firstClue
     for (var i=firstFilled+1;i< firstClue.number; i++){
       if (cells[i].autoValue !=firstClue.colour){
+        console.log('edge proximity - updating with colour '+i)
     updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false}
       results.push(updateInfo);
         };
@@ -244,6 +324,7 @@ edgeProximity: function(data){
   if (cells.length - lastFilled < lastClue.length){
     for (var i=cells.length-lastClue.number; i< lastFilled; i++){
       if (cells[i].autoValue !=firstClue.colour){
+        console.log('edge proximity - updating with colour '+i)
     updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false}
       results.push(updateInfo);
         };
@@ -282,6 +363,7 @@ overlap: function(data){
     var spaceEnd = spaceStart + spaces[i].spacelength; 
     for (var j=spaceStart; j< spaceEnd; j++){
       if (cells[j].autoValue != 'cross'){
+        console.log('overlap - updating with cross '+j)
       updateInfo= {row: cells[j].cellRow, col: cells[j].cellCol, fillPattern: 'cross', auto:true, toggle:false}
         results.push(updateInfo);
         }else{console.log('cross value already set')}
@@ -321,6 +403,8 @@ overlap: function(data){
       return clue.number;
     });
     for (var space = 0; space < spaces.length; space++){
+      console.log('space '+space);
+      console.log(spaces[space])
       //see if there is any entry in the relevant clues array
       clueLengths = spaces[space].clues.map(function(item){
           return clueValues[item];
@@ -337,7 +421,8 @@ overlap: function(data){
           }else {return total + item};
         });
       }else totalLength = 0;
-
+      console.log('selected Clues')
+      console.log(selectedClues);
         if (totalLength > (spaces[space].spacelength)/2){
           offset = spaces[space].spacelength - totalLength;
           startpoint = spaces[space].spacestart;
@@ -357,6 +442,7 @@ overlap: function(data){
               cells[startpoint].testValue1 = -1;
               cells[startpoint].testColour = 'cross';
               cells[startpoint + offset].testValue2 = -1;
+              cells[startpoint + offset].testColour = 'cross';
               startpoint +=1;
               endpoint+=1;
               }  
@@ -364,12 +450,17 @@ overlap: function(data){
           //now see which cells have both testValues the same
           for (var i=0; i< cells.length;i++){
             if ((cells[i].testValue1 > -1)&&(cells[i].testValue1 === cells[i].testValue2)){
-            if (cells[i].autoValue != cells[i].testColour){  
+            if (cells[i].autoValue != cells[i].testColour){ 
+              console.log('current and new colours below:')
+              console.log(cells[i].autoValue) 
+              console.log(cells[i].testColour)
+              console.log('overlap - updating with colour '+i)
             updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: cells[i].testColour, auto:true, toggle:false}
               results.push(updateInfo);
-              }else {console.log('value already set')}
+              }else {console.log('value already set'+i)}
             }
-          } 
+          }
+        console.log('end of checking loop')   
         }
       }
     }

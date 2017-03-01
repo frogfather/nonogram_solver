@@ -5,11 +5,14 @@ import Grid from '../components/Grid'
 import Sidebar from '../components/Sidebar'
 import Gamedata from '../models/Gamedata'
 import solvings from '../models/solvings'
+import Puzzles from '../models/puzzles'
 
 class Game extends React.Component{
 
   constructor(options){
     super(options)
+    var puzzles = new Puzzles();
+
     var game = new Gamedata();
     var gameSize = game.grid[0].length * game.grid.length
     this.state = {rows:game.rows, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize}
@@ -57,11 +60,13 @@ class Game extends React.Component{
  var cellsFilled = 0;
  var updateData;
  for (var row = 0; row< this.state.rows.length; row++){
+  console.log('row '+row)
   updateData = solvings.identifyBlocks({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
    this.updateCells(updateData)
  }
    var column;
    for (var col = 0; col< this.state.cols.length;col++){
+    console.log('col '+col)
      column = [];
      for (var row = 0; row < this.state.rows.length; row++){
        column.push(this.state.grid[row][col]);
@@ -76,6 +81,7 @@ class Game extends React.Component{
   var cellsFilled = 0;
   var updateData;
   for (var row = 0; row< this.state.rows.length; row++){
+   console.log('row '+row) 
     if (this.state.rows[row].length ===1){
    updateData = solvings.singleClue({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
     this.updateCells(updateData)
@@ -84,6 +90,7 @@ class Game extends React.Component{
     
     var column;
     for (var col = 0; col< this.state.cols.length;col++){
+      console.log('col '+col)
       if (this.state.cols[col].length ===1){  
       column = [];
       for (var row = 0; row < this.state.rows.length; row++){
@@ -100,11 +107,13 @@ class Game extends React.Component{
     var cellsFilled =0;
     var updateData;
     for (var row = 0; row< this.state.rows.length;row++){
+      console.log('row '+row)
      updateData =  solvings.edgeProximity({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
      cellsFilled += this.updateCells(updateData)
     }
     var column;
     for (var col = 0; col< this.state.cols.length;col++){
+      console.log('col '+col)
       column = [];
       for (var row = 0; row < this.state.rows.length; row++){
         column.push(this.state.grid[row][col]);
@@ -119,6 +128,7 @@ class Game extends React.Component{
     var cellsFilled = 0;
     var updateData;
     for (var row = 0; row< this.state.rows.length;row++){
+      console.log('row '+row)
      updateData =  solvings.overlap({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
       this.updateCells(updateData)
     }
@@ -128,6 +138,7 @@ class Game extends React.Component{
       for (var row = 0; row < this.state.rows.length; row++){
         column.push(this.state.grid[row][col]);
       }
+      console.log('col '+col)
     updateData = solvings.overlap({cells: column, clues: this.state.cols[col], colour: false, row: false})
     cellsFilled += this.updateCells(updateData)
     }
@@ -135,30 +146,90 @@ class Game extends React.Component{
   }
 
   solveThePuzzle(){
-  var totalSolved;
+  var totalSolved =0;
   var solved;
   var noneSolved = false;
   var pass = 0;
-    while (!noneSolved){
-    pass +=1;
-    console.log('pass: '+pass)
-    totalSolved = 0;
-    solved = 0;
-    solved = this.generalOverlap();
-    console.log('General overlap solved '+solved);
-    totalSolved += solved;
-    solved = this.edgeProximity();
-    console.log('Edge proximity solved '+solved);
-    totalSolved += solved;
-    solved = this.singleClue();
-    console.log('Single clue solved '+solved);
-    totalSolved += solved;
-    solved = this.identifyBlocks();
-    console.log('Identify blocks solved '+solved);
-    totalSolved += solved;
-    if ((totalSolved === 0)||(pass === 10)){noneSolved = true}  
-    console.log('total solved :'+totalSolved)  
-     }
+  solved = this.generalOverlap();
+  console.log('General overlap solved '+solved);
+  totalSolved += solved;
+  solved = this.edgeProximity();
+  console.log('Edge proximity solved '+solved);
+  totalSolved += solved;
+  solved = this.singleClue();
+  console.log('Single clue solved '+solved);
+  totalSolved += solved;
+  solved = this.identifyBlocks();
+  console.log('Identify blocks solved '+solved);
+  pass +=1;
+  solved = this.generalOverlap();
+  console.log('General overlap solved '+solved);
+  totalSolved += solved;
+  solved = this.edgeProximity();
+  console.log('Edge proximity solved '+solved);
+  totalSolved += solved;
+  solved = this.singleClue();
+  console.log('Single clue solved '+solved);
+  totalSolved += solved;
+  solved = this.identifyBlocks();
+  console.log('Identify blocks solved '+solved);
+  pass +=1; solved = this.generalOverlap();
+  console.log('General overlap solved '+solved);
+  totalSolved += solved;
+  solved = this.edgeProximity();
+  console.log('Edge proximity solved '+solved);
+  totalSolved += solved;
+  solved = this.singleClue();
+  console.log('Single clue solved '+solved);
+  totalSolved += solved;
+  solved = this.identifyBlocks();
+  console.log('Identify blocks solved '+solved);
+  pass +=1;
+  solved = this.generalOverlap();
+  console.log('General overlap solved '+solved);
+  totalSolved += solved;
+  solved = this.edgeProximity();
+  console.log('Edge proximity solved '+solved);
+  totalSolved += solved;
+  solved = this.singleClue();
+  console.log('Single clue solved '+solved);
+  totalSolved += solved;
+  solved = this.identifyBlocks();
+  console.log('Identify blocks solved '+solved);
+  pass +=1; solved = this.generalOverlap();
+  console.log('General overlap solved '+solved);
+  totalSolved += solved;
+  solved = this.edgeProximity();
+  console.log('Edge proximity solved '+solved);
+  totalSolved += solved;
+  solved = this.singleClue();
+  console.log('Single clue solved '+solved);
+  totalSolved += solved;
+  solved = this.identifyBlocks();
+  console.log('Identify blocks solved '+solved);
+  pass +=1;
+  console.log('total solved '+totalSolved)
+
+    // while (!noneSolved){
+    // pass +=1;
+    // console.log('pass: '+pass)
+    // totalSolved = 0;
+    // solved = 0;
+    // solved = this.generalOverlap();
+    // console.log('General overlap solved '+solved);
+    // totalSolved += solved;
+    // solved = this.edgeProximity();
+    // console.log('Edge proximity solved '+solved);
+    // totalSolved += solved;
+    // solved = this.singleClue();
+    // console.log('Single clue solved '+solved);
+    // totalSolved += solved;
+    // solved = this.identifyBlocks();
+    // console.log('Identify blocks solved '+solved);
+    // totalSolved += solved;
+    // if ((totalSolved === 0)||(pass === 10)){noneSolved = true}  
+    // console.log('total solved :'+totalSolved)  
+    //  }
   }
 
   buttonClick(event){

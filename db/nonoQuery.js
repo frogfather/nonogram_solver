@@ -8,8 +8,9 @@ NonoQuery.prototype = {
 
   all: function(onQueryFinished){
     MongoClient.connect(this.url, function(err, db) {
-        var collection = db.collection('nonograms'); 
+        var collection = db.collection('puzzles'); 
         collection.find().toArray(function(err, docs) {
+          console.log(this)
           console.log(docs);
           onQueryFinished(docs);
          });
