@@ -62,7 +62,7 @@ class Game extends React.Component{
  for (var row = 0; row< this.state.rows.length; row++){
   console.log('row '+row)
   updateData = solvings.identifyBlocks({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
-   this.updateCells(updateData)
+   cellsFilled += this.updateCells(updateData)
  }
    var column;
    for (var col = 0; col< this.state.cols.length;col++){
@@ -84,7 +84,7 @@ class Game extends React.Component{
    console.log('row '+row) 
     if (this.state.rows[row].length ===1){
    updateData = solvings.singleClue({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
-    this.updateCells(updateData)
+    cellsFilled += this.updateCells(updateData)
     }
   }
     
@@ -128,9 +128,9 @@ class Game extends React.Component{
     var cellsFilled = 0;
     var updateData;
     for (var row = 0; row< this.state.rows.length;row++){
-      console.log('row '+row)
+      console.log('ROW '+row)
      updateData =  solvings.overlap({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
-      this.updateCells(updateData)
+      cellsFilled += this.updateCells(updateData)
     }
     var column;
     for (var col = 0; col< this.state.cols.length;col++){
@@ -138,7 +138,7 @@ class Game extends React.Component{
       for (var row = 0; row < this.state.rows.length; row++){
         column.push(this.state.grid[row][col]);
       }
-      console.log('col '+col)
+      console.log('COL '+col)
     updateData = solvings.overlap({cells: column, clues: this.state.cols[col], colour: false, row: false})
     cellsFilled += this.updateCells(updateData)
     }
@@ -149,7 +149,9 @@ class Game extends React.Component{
   var totalSolved =0;
   var solved;
   var noneSolved = false;
-  var pass = 0;
+
+  var pass = 1;
+  console.log('pass: '+pass);
   solved = this.generalOverlap();
   console.log('General overlap solved '+solved);
   totalSolved += solved;
@@ -160,55 +162,8 @@ class Game extends React.Component{
   console.log('Single clue solved '+solved);
   totalSolved += solved;
   solved = this.identifyBlocks();
-  console.log('Identify blocks solved '+solved);
-  pass +=1;
-  solved = this.generalOverlap();
-  console.log('General overlap solved '+solved);
-  totalSolved += solved;
-  solved = this.edgeProximity();
-  console.log('Edge proximity solved '+solved);
-  totalSolved += solved;
-  solved = this.singleClue();
-  console.log('Single clue solved '+solved);
-  totalSolved += solved;
-  solved = this.identifyBlocks();
-  console.log('Identify blocks solved '+solved);
-  pass +=1; solved = this.generalOverlap();
-  console.log('General overlap solved '+solved);
-  totalSolved += solved;
-  solved = this.edgeProximity();
-  console.log('Edge proximity solved '+solved);
-  totalSolved += solved;
-  solved = this.singleClue();
-  console.log('Single clue solved '+solved);
-  totalSolved += solved;
-  solved = this.identifyBlocks();
-  console.log('Identify blocks solved '+solved);
-  pass +=1;
-  solved = this.generalOverlap();
-  console.log('General overlap solved '+solved);
-  totalSolved += solved;
-  solved = this.edgeProximity();
-  console.log('Edge proximity solved '+solved);
-  totalSolved += solved;
-  solved = this.singleClue();
-  console.log('Single clue solved '+solved);
-  totalSolved += solved;
-  solved = this.identifyBlocks();
-  console.log('Identify blocks solved '+solved);
-  pass +=1; solved = this.generalOverlap();
-  console.log('General overlap solved '+solved);
-  totalSolved += solved;
-  solved = this.edgeProximity();
-  console.log('Edge proximity solved '+solved);
-  totalSolved += solved;
-  solved = this.singleClue();
-  console.log('Single clue solved '+solved);
-  totalSolved += solved;
-  solved = this.identifyBlocks();
-  console.log('Identify blocks solved '+solved);
-  pass +=1;
-  console.log('total solved '+totalSolved)
+  console.log('total solved on this pass'+totalSolved)
+
 
     // while (!noneSolved){
     // pass +=1;
@@ -227,7 +182,7 @@ class Game extends React.Component{
     // solved = this.identifyBlocks();
     // console.log('Identify blocks solved '+solved);
     // totalSolved += solved;
-    // if ((totalSolved === 0)||(pass === 10)){noneSolved = true}  
+    // if ((totalSolved === 0)||(pass === 8)){noneSolved = true}  
     // console.log('total solved :'+totalSolved)  
     //  }
   }
@@ -238,7 +193,6 @@ class Game extends React.Component{
 
   updateCells(options){
     if (options){
-
     var uSolved = 0;
     var aSolved = 0;
     for (var i=0; i< options.length; i++){

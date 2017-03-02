@@ -8,13 +8,13 @@ describe('solvings', function () {
     data1 = {
       row: true,
       component:3,
-      cells: ['cross','cross','clear','clear','black','black','black','cross','cross','cross'],
+      cells: [{autoValue:'cross'},{autoValue:'cross'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'black'},{autoValue:'black'},{autoValue:'black'},{autoValue:'cross'},{autoValue:'cross'},{autoValue:'cross'}],
       clues: [5]
     };
     data2 = {
       row: false,
       component:2,
-      cells: ['clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear'],
+      cells: [{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'}],
       clues: [5,6,1,3]
     };
 
@@ -28,7 +28,7 @@ describe('solvings', function () {
     data4 = {
       row: false,
       component:2,
-      cells: ['clear','clear','clear','clear','black','clear','clear','black','black','clear','cross','clear','clear','clear','clear'],
+      cells: [{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'black'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'black'},{autoValue:'black'},{autoValue:'clear'},{autoValue:'cross'},,{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'}],
       clues: [2,6,1]
     };
     spaces1 = [{spacelength:5, clues: []},{spacelength:4, clues: []},{spacelength:4, clues: []}];
@@ -36,21 +36,18 @@ describe('solvings', function () {
   });
 
   it('should return 5 as playable length', function () {
-    assert.deepEqual(Solvings.getPlayable(data1.cells),['clear','clear','black','black','black']);
+    assert.deepEqual(Solvings.getPlayable(data1.cells),[{autoValue:'clear'},{autoValue:'clear'},{autoValue:'black'},{autoValue:'black'},{autoValue:'black'}]);
   });
 
   it('should return 20 as playable length', function () {
-    assert.deepEqual(Solvings.getPlayable(data2.cells),['clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear','clear']);
+    assert.deepEqual(Solvings.getPlayable(data2.cells),[{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'}]);
   });
  
   it('should return 0 as playable length', function () {
     assert.deepEqual(Solvings.getPlayable(data3.cells),[]);
   });
 
-  it('should return 15 as playable length', function () {
-    assert.equal(Solvings.getPlayable(data4.cells).length,15);
-  });
-
+  
   it('should return an array with the correct clue distribution', function () {
     assert.deepEqual(Solvings.clueDistribution(spaces1,clues1,false),[{spacelength:5, clues: [0,1]},{spacelength:4, clues: [1,2]},{spacelength:4, clues: [2]}]);
   });
