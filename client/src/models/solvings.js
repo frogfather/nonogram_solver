@@ -4,7 +4,7 @@ var solvings = {
     var cells = data;
     var cellValues = data.map(function(cell){
       return cell.autoValue;
-    }) 
+    })
     if (cellValues.findIndex(function(currentValue){
       return (currentValue === 'clear')
     }) === -1){return []}
@@ -47,15 +47,75 @@ getDistinctSpaces: function(data){
   if (spacelength > 0){
     spaceData = {spacelength:spacelength,spacestart:spacestart,clues:[]}
     result.push(spaceData);
-  }  
+  }
 }
 return result;
+},
+
+cluesWillFit: function(spaces,clues,colour){
+  //will the provided clues fit in the provided spaces
+  result = true;
+  if (clues.length === 0) {return result};
+  var spaceValues = spaces.map(function(space){
+    return space.spacelength;
+  });
+  var clueValues = clues.map(function(clue){
+    return clue.number;
+  });
+  if (spaceValues.reduce(function(total,num){
+    return total+num;}) > clueValues.reduce(function(total,num){
+      return total+num;})){
+      //only concerned with first legal arrangement
+      var spaceNo=0;
+      var spaceLeft = spaceValues[0];
+      var finished;
+      console.log(spaceValues);
+      console.log(clueValues);
+      for (var i = 0; i< clueValues.length;i++){
+        finished = false;
+        while (!finished){
+        console.log('spaceleft: '+spaceLeft);
+        console.log('clue: '+clueValues[i])
+        // for each clue, will it fit? yes, reduce spaceLeft, no, increment spaceNo
+        if (clueValues[i]<=spaceLeft){
+        console.log('fits')
+        //it fits. reduce remaining space;
+        if (!colour){
+        spaceLeft -= clueValues[i]+1;
+        }else{
+          //coloured puzzle - only add 1 if colours are the same
+          spaceLeft -= clueValues[i]
+          if ((i<clueValues.length-1)&&(clues[i].colour === clues[i+1].colour)){
+            console.log('extra space removed because colours are the same')
+            spaceLeft -= 1}
+          }
+        finished = true;
+        } else{
+        console.log('doesnt fit')
+        //it doesn't fit.
+        //move to next space if there is one
+        if (spaceNo < spaceValues.length - 1){
+          spaceNo += 1;
+          console.log('move to space '+spaceNo)
+          spaceLeft = spaceValues[spaceNo];
+          }else{
+          console.log('no spaces left')
+          result =  false;
+          finished = true;
+          }
+        }
+      }
+
+      }
+    }
+  console.log(result)
+  return result;
 },
 
 clueDistribution: function(spaces,clues,colour){
   var clueArray = clues.map(function(clue){
     return clue.number;
-  }); 
+  });
   var spaceArray = spaces.map(function(space){
     return space.spacelength;
   });
@@ -88,10 +148,10 @@ clueDistribution: function(spaces,clues,colour){
          {prevData = 0;}
          currData = 0;
          for (var clue = startPos; clue < clueArray.length; clue++){
-          
+
           currArray = clueArray.map(function(clue,index){
             return index;
-          }).slice(startPos,clue+1); 
+          }).slice(startPos,clue+1);
 
           currData = clueArray.slice(startPos,clue+1).reduce(function(total,num,index){
             if ((index > 0)&&(!colour)){return total + num +1}else{return total + num}
@@ -104,14 +164,14 @@ clueDistribution: function(spaces,clues,colour){
             &&(nextSpace >= nextData)
             &&(prevSpace >= prevData)){
             for (var i = 0 ; i< currArray.length;i++){
-              if ( spaces[space].clues.indexOf(currArray[i]) === -1){ 
+              if ( spaces[space].clues.indexOf(currArray[i]) === -1){
                 spaces[space].clues.push(currArray[i]);}
               }
-            }  
+            }
           }
         }
       }
-      return spaces; 
+      return spaces;
     },
 
     identifyBlocks: function(data){
@@ -126,10 +186,10 @@ var cellValues = cells.map(function(cell){
   return cell.autoValue;
 });
 var firstFilled = cellValues.findIndex(function(currentValue){
-  return ((currentValue != 'cross')&&(currentValue != 'clear'))    
+  return ((currentValue != 'cross')&&(currentValue != 'clear'))
 });
 var unfilled = cellValues.findIndex(function(currentValue){
-  return (currentValue === 'clear')    
+  return (currentValue === 'clear')
 });
 if ((firstFilled > -1)&&(unfilled > -1)){
   var clues = data.clues;
@@ -148,14 +208,14 @@ if ((firstFilled > -1)&&(unfilled > -1)){
       if (blockLength > 0){
         blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: cellValues[i-1]};
         blockInfo.push(blockData)
-        blockLength = 0;  
+        blockLength = 0;
       }
     }
   }
   if (blockLength > 0){
     blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: cellValues[i-1]};
     blockInfo.push(blockData)
-    blockLength = 0;  
+    blockLength = 0;
   }
 
 // if the largest block === the largest clue we can put crosses at
@@ -172,7 +232,7 @@ if (!data.colour){
 
   if (largestBlockSize === largestClue){
 
-    var crossPos = largestBlock.blockstart-1 
+    var crossPos = largestBlock.blockstart-1
     if ((crossPos >= 0)&&(cells[crossPos].autoValue != 'cross')){
       console.log('updating with cross'+crossPos)
       updateInfo= {row: cells[crossPos].cellRow, col: cells[crossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false}
@@ -183,7 +243,7 @@ if (!data.colour){
       console.log('updating with cross'+crossPos)
       updateInfo= {row: cells[crossPos].cellRow, col: cells[crossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false}
       results.push(updateInfo);
-    } 
+    }
   }
 }
 
@@ -243,7 +303,7 @@ if (blockInfo.length > 0){
 // if the start position and the clue length are the same, the space
 // at (startpoint - cluelength) to (endpoint - cluelength) must be crossed
 
-// if we have more blocks than clues then see if some can be joined 
+// if we have more blocks than clues then see if some can be joined
 //together
 
 //for a given block list possibilities for which clue it is.
@@ -255,13 +315,13 @@ singleClue: function(data){
 //find the position of first and last filled cells
 var results = [];
 var updateInfo = {};
-var clue = data.clues[0]; 
+var clue = data.clues[0];
 var cells = data.cells;
 var cellValues = cells.map(function(cell){
   return cell.autoValue;
 });
 var firstFilled = cellValues.findIndex(function(currentValue){
-  return ((currentValue != 'cross')&&(currentValue !='clear'))    
+  return ((currentValue != 'cross')&&(currentValue !='clear'))
 });
 if (firstFilled > -1){
   var lastFilled = cellValues.length-1;
@@ -280,7 +340,7 @@ for (var i=0; i< cells.length; i++){
   }
 }
 }
-return results;  
+return results;
 },
 
 edgeProximity: function(data){
@@ -292,15 +352,15 @@ edgeProximity: function(data){
   });
   //firstFilled and last filled should be separate function
   var firstFilled = cellValues.findIndex(function(currentValue){
-    return ((currentValue != 'cross')&&(currentValue !='clear'))    
+    return ((currentValue != 'cross')&&(currentValue !='clear'))
   })
   if (firstFilled > -1){ //no point doing anything if row is clear or full of crosses
-    
+
     var lastFilled = cellValues.length-1;
     while ((cellValues[lastFilled] ==='clear')||(cellValues[lastFilled]==='cross')){
       lastFilled -= 1 ;
     };
-    var firstClue = data.clues[0]; 
+    var firstClue = data.clues[0];
     var lastClue = data.clues[data.clues.length-1];
     if (firstFilled < firstClue.number){
     //fill in all cells from firstFilled to firstClue
@@ -320,9 +380,9 @@ edgeProximity: function(data){
         results.push(updateInfo);
       };
     }
-  }  
+  }
 }
-return results;  
+return results;
 },
 
 overlap: function(data){
@@ -331,13 +391,13 @@ overlap: function(data){
   var clues = data.clues;
   var playable = this.getPlayable(cells);
   var updateInfo = {};
-  
+
   for (var i=0; i< data.cells.length; i++){
     cells[i].testValue1 = -1;
     cells[i].testValue2 = -1;
     cells[i].testColour = 'clear';
-  }    
-  
+  }
+
   if (clues.length > 0){
   // occasionally you get rows with no clues at all!
   var spaces = this.getDistinctSpaces(playable);
@@ -351,18 +411,18 @@ overlap: function(data){
   for (var i=0; i< spaces.length; i++){
     if(spaces[i].clues.length === 0){
       var spaceStart = spaces[i].spacestart;
-      var spaceEnd = spaceStart + spaces[i].spacelength; 
+      var spaceEnd = spaceStart + spaces[i].spacelength;
       for (var j=spaceStart; j< spaceEnd; j++){
         if (cells[j].autoValue != 'cross'){
           console.log('overlap - updating with cross '+j)
           updateInfo= {row: cells[j].cellRow, col: cells[j].cellCol, fillPattern: 'cross', auto:true, toggle:false}
           results.push(updateInfo);
         }else{console.log('cross value already set')}
-      } 
+      }
     }
   }
 
-  var count; 
+  var count;
   var index;
   for (var i=0;i<clues.length;i++){
       //does this clue appear in more than one space?
@@ -375,11 +435,11 @@ overlap: function(data){
       if (count > 1){
         //remove all instances of that clue from spaces
         for (var j = 0; j < spaces.length; j++){
-          index = spaces[j].clues.indexOf(i); 
+          index = spaces[j].clues.indexOf(i);
           if (index>-1){
             spaces[j].clues.splice(index,1)}
           }
-        }  
+        }
       }
     //now each space will contain clues that can't be anywhere else
     //for each space do an overlap check
@@ -416,13 +476,13 @@ overlap: function(data){
         endpoint = startpoint;
         for (var i=0;i<selectedClues.length;i++){
           endpoint += selectedClues[i].number;
-          
+
           for (var j=startpoint; j<endpoint;j++){
             cells[j].testValue1 = i;
             cells[j].testColour = selectedClues[i].colour;
             cells[j+offset].testColour = selectedClues[i].colour;
             cells[j+offset].testValue2 = i;
-            
+
           }
           startpoint = endpoint;
           if ((i<selectedClues.length-1)&&(!data.colour)){
@@ -432,28 +492,28 @@ overlap: function(data){
             cells[startpoint + offset].testColour = 'cross';
             startpoint +=1;
             endpoint+=1;
-          }  
+          }
         }
       }
-    } 
+    }
           //now see which cells have both testValues the same
           for (var i=0; i< cells.length;i++){
             if ((cells[i].testValue1 > -1)&&(cells[i].testValue1 === cells[i].testValue2)){
-              if (cells[i].autoValue != cells[i].testColour){ 
+              if (cells[i].autoValue != cells[i].testColour){
                 console.log('overlap - updating with colour '+i)
                 updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: cells[i].testColour, auto:true, toggle:false}
                 results.push(updateInfo);
               }else {console.log('value already set'+i)}
             }
           }
-          
+
         }
         return results;
       }
     }
 
-    
-    
+
+
 
 
 

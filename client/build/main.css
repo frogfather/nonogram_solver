@@ -27,12 +27,20 @@ border: 1px solid pink;
 #colspacer{
 width: 20%;
 background-color: gray;
+text-align: center;
+font-family: "papyrus";
+font-size: 30px;
+color: #884444;
+padding-top: 25px;
+text-shadow: 2px 2px #555555;
+
 }
 
 #column{
 display:flex;
 align-items: flex-end;
 width: 80%;
+background-color: #AA6666;
 }
 
 
