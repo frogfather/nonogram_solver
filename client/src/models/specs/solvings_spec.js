@@ -28,9 +28,38 @@ describe('solvings', function () {
     data4 = {
       row: false,
       component:2,
-      cells: [{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'black'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'black'},{autoValue:'black'},{autoValue:'clear'},{autoValue:'cross'},,{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'}],
+      cells: [{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'black'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'black'},{autoValue:'black'},{autoValue:'clear'},{autoValue:'cross'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'}],
       clues: [2,6,1]
     };
+
+    data5 = {
+      row: false,
+      component:2,
+      cells: [
+        {autoValue:'clear'},
+        {autoValue:'black'},
+        {autoValue:'cross'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'black'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'clear'},
+        {autoValue:'black'},
+        {autoValue:'clear'},
+        {autoValue:'clear'}],
+      clues: [{colour:'black', number:1},{colour:'black', number:6},{colour:'black', number:2}]
+    };
+
+
     spaces1 = [{spacelength:5, clues: []},{spacelength:4, clues: []},{spacelength:4, clues: []}];
     clues1 = [{id:1, colour:'black', number:3},{id:2, colour:'black', number:1},{id:3, colour:'black', number:4}]
 
@@ -85,5 +114,8 @@ describe('solvings', function () {
     assert.equal(Solvings.cluesWillFit(spaces2,clues5,false),false);
   });
 
+  it('8 should return true', function () {
+    assert.equal(Solvings.arrangementIsLegal(data5),true);
+  });
 
 })

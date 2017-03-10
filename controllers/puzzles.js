@@ -5,7 +5,7 @@ var query = new PuzzleQuery();
 
 
 puzzleRouter.get('/', function(req, res) {
-  query.all(function(results){ 
+  query.all(function(results){
     res.json(results);
   });
 });
