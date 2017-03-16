@@ -12,7 +12,7 @@ Puzzles.prototype = {
     request.send();
   },
 
-  all: function(callback){ 
+  all: function(callback){
     var self = this;
     this.makeRequest("http://localhost:3000/api/puzzles", function(){
       if(this.status !== 200) return;
@@ -25,7 +25,7 @@ Puzzles.prototype = {
 
   populatePuzzles: function(results){ //NEW
     var puzzles = [];
-    
+
     for(var result of results){
       console.log(result)
       var puzzle = new Puzzle(result);

@@ -7,6 +7,8 @@ var Cell = function(options){
   this.testValue1 = options.testValue1;
   this.testValue2 = options.testValue2;
   this.testColour = options.testColour;
+  this.rowClue = options.rowClue;
+  this.colClue = options.colClue;
   this.show = options.show;
   this.lastchanged = {
     time: options.lastchanged.time,

@@ -1,7 +1,7 @@
 import Cell from './Cell';
 
 var Cells = function(options){
-  var result = [];  
+  var result = [];
   var length = options.grid.length;
   const row = options.row;
   var cell1;
@@ -14,15 +14,17 @@ var Cells = function(options){
       testValue1: -1,
       testValue2: -1,
       testColour: 'clear',
+      rowClue: 'none',
+      colClue: 'none',
       show: 'user',
       lastchanged: {
         time: Date.now(),
         user: 'new'
         }
     });
-  result.push(cell1);    
+  result.push(cell1);
   }
-  
+
  return result;
 }
 

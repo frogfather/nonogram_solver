@@ -114,8 +114,12 @@ describe('solvings', function () {
     assert.equal(Solvings.cluesWillFit(spaces2,clues5,false),false);
   });
 
-  it('8 should return true', function () {
-    assert.equal(Solvings.arrangementIsLegal(data5),true);
+  it('8 should return 5', function () {
+    assert.equal(Solvings.overallClueLength(clues5),5);
+  });
+
+  it('9 should return 7', function () {
+    assert.equal(Solvings.overallClueLength(clues4),7);
   });
 
 })
