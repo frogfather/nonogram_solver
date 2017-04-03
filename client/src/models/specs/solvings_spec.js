@@ -61,7 +61,7 @@ describe('solvings', function () {
 
 
     spaces1 = [{spacelength:5, clues: []},{spacelength:4, clues: []},{spacelength:4, clues: []}];
-    clues1 = [{id:1, colour:'black', number:3},{id:2, colour:'black', number:1},{id:3, colour:'black', number:4}]
+    clues1 = [{colour:'black', number:3},{colour:'black', number:1},{colour:'black', number:4}]
 
     spaces2 = [{spacelength:2, clues: []},{spacelength:3, clues: []},{spacelength:1, clues: []}];
     clues2 = [{id:1, colour:'black', number:3},{id:2, colour:'black', number:1}]
@@ -70,20 +70,9 @@ describe('solvings', function () {
     clues5 = [{id:1, colour:'black', number:1},{id:2, colour:'green', number:1},{id:3, colour:'black', number:3}]
   });
 
-  it('should return 5 as playable length', function () {
-    assert.deepEqual(Solvings.getPlayable(data1.cells),[{autoValue:'clear'},{autoValue:'clear'},{autoValue:'black'},{autoValue:'black'},{autoValue:'black'}]);
-  });
-
-  it('should return 20 as playable length', function () {
-    assert.deepEqual(Solvings.getPlayable(data2.cells),[{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'},{autoValue:'clear'}]);
-  });
-
-  it('should return 0 as playable length', function () {
-    assert.deepEqual(Solvings.getPlayable(data3.cells),[]);
-  });
 
   it('should return an array with the correct clue distribution', function () {
-    assert.deepEqual(Solvings.clueDistribution(spaces1,clues1,false),[{spacelength:5, clues: [0,1]},{spacelength:4, clues: [1,2]},{spacelength:4, clues: [2]}]);
+    assert.deepEqual(Solvings.clueDistribution(spaces1,clues1,false),[{spacelength:5, clues: [{colour:'black',number:3},{colour: 'black',number: 1}]},{spacelength:4, clues: [{colour:'black', number: 1},{colour: 'black',number: 4}]},{spacelength:4, clues: [{colour: 'black', number: 4}]}]);
   });
 
   it('1 should return true', function () {
@@ -120,6 +109,10 @@ describe('solvings', function () {
 
   it('9 should return 7', function () {
     assert.equal(Solvings.overallClueLength(clues4),7);
+  });
+
+  it('10 should return 3', function () {
+    assert.equal(Solvings.getLargestClue(clues3),3);
   });
 
 })

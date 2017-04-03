@@ -6,6 +6,7 @@ import Sidebar from '../components/Sidebar'
 import Gamedata from '../models/Gamedata'
 import solvings from '../models/solvings'
 import Puzzles from '../models/puzzles'
+import update from 'immutability-helper';
 
 class Game extends React.Component{
 
@@ -15,7 +16,7 @@ class Game extends React.Component{
 
     var game = new Gamedata();
     var gameSize = game.grid[0].length * game.grid.length
-    this.state = {rows:game.rows, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize}
+    this.state = {rows:game.rows, rupdate: 1, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize}
   }
 
 
@@ -23,8 +24,8 @@ class Game extends React.Component{
     if (this.state.show === "user"){
       var row = options.row;
       var col = options.col;
-    // this is not correct because "this" here is from the grid element    
-    this.updateCells([{row: row, col: col, fillPattern: this.state.selected, auto:false, toggle:true}]);
+    // this is not correct because "this" here is from the grid element
+    this.updateCells([{row: row, col: col, fillPattern: this.state.selected, auto:false, toggle:true, isRow: true, clue: -1, cluePos: -1}]);
   }
 
 }
@@ -32,6 +33,7 @@ class Game extends React.Component{
 checkClick(event){
   var ischecked = event.target.checked;
   if (event.target.id === 'ckcross'){
+    console.log(this.state.aremaining)
     if (ischecked){
       this.state.selected = 'cross';
     }else
@@ -41,16 +43,16 @@ checkClick(event){
   }else if (event.target.id ==='ckauto'){
     var showState;
     if (ischecked) {
-      this.setState({show: 'auto'}) 
+      this.setState({show: 'auto'})
       showState = 'auto';
     }else{
       this.setState({show: 'user'})
       showState = 'user';
-    }  
+    }
     for (var y = 0; y< this.state.cols.length; y++){
       for (var x = 0; x< this.state.rows.length; x++){
         this.state.grid[x][y].show = showState;
-      } 
+      }
     }
   }
 }
@@ -72,15 +74,15 @@ for (var col = 0; col< this.state.cols.length;col++){
  }
  updateData = solvings.identifyBlocks({cells: column, clues: this.state.cols[col], colour: false, row: false})
  cellsFilled += this.updateCells(updateData)
-}  
-return cellsFilled;  
+}
+return cellsFilled;
 }
 singleClue(){
   //if the row isn't empty and there's only one clue we should be able to cross out some cells
   var cellsFilled = 0;
   var updateData;
   for (var row = 0; row< this.state.rows.length; row++){
-   console.log('row '+row) 
+   console.log('row '+row)
    if (this.state.rows[row].length ===1){
      updateData = solvings.singleClue({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
      cellsFilled += this.updateCells(updateData)
@@ -90,7 +92,7 @@ singleClue(){
  var column;
  for (var col = 0; col< this.state.cols.length;col++){
   console.log('col '+col)
-  if (this.state.cols[col].length ===1){  
+  if (this.state.cols[col].length ===1){
     column = [];
     for (var row = 0; row < this.state.rows.length; row++){
       column.push(this.state.grid[row][col]);
@@ -98,8 +100,8 @@ singleClue(){
     updateData = solvings.singleClue({cells: column, clues: this.state.cols[col], colour: false, row: false})
     cellsFilled += this.updateCells(updateData)
   }
-}  
-return cellsFilled;  
+}
+return cellsFilled;
 }
 
 edgeProximity(){
@@ -127,7 +129,7 @@ generalOverlap(){
   var cellsFilled = 0;
   var updateData;
   for (var row = 0; row< this.state.rows.length;row++){
-    console.log('ROW '+row)
+    console.log('ROW '+row+' xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
     updateData =  solvings.overlap({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
     cellsFilled += this.updateCells(updateData)
   }
@@ -137,11 +139,11 @@ generalOverlap(){
     for (var row = 0; row < this.state.rows.length; row++){
       column.push(this.state.grid[row][col]);
     }
-    console.log('COL '+col)
+    console.log('COL '+col+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
     updateData = solvings.overlap({cells: column, clues: this.state.cols[col], colour: false, row: false})
     cellsFilled += this.updateCells(updateData)
   }
-  return cellsFilled;  
+  return cellsFilled;
 }
 
 solveThePuzzle(){
@@ -162,28 +164,6 @@ solveThePuzzle(){
   totalSolved += solved;
   solved = this.identifyBlocks();
   console.log('total solved on this pass'+totalSolved)
-
-
-    // while (!noneSolved){
-    // pass +=1;
-    // console.log('pass: '+pass)
-    // totalSolved = 0;
-    // solved = 0;
-    // solved = this.generalOverlap();
-    // console.log('General overlap solved '+solved);
-    // totalSolved += solved;
-    // solved = this.edgeProximity();
-    // console.log('Edge proximity solved '+solved);
-    // totalSolved += solved;
-    // solved = this.singleClue();
-    // console.log('Single clue solved '+solved);
-    // totalSolved += solved;
-    // solved = this.identifyBlocks();
-    // console.log('Identify blocks solved '+solved);
-    // totalSolved += solved;
-    // if ((totalSolved === 0)||(pass === 8)){noneSolved = true}  
-    // console.log('total solved :'+totalSolved)  
-    //  }
   }
 
   buttonClick(event){
@@ -198,27 +178,42 @@ solveThePuzzle(){
       var data = options[i];
       if (data.auto){
         if ((data.toggle)&&(this.state.grid[data.row][data.col].autoValue ===data.fillPattern)){
-          aSolved -=1;  
-          this.state.grid[data.row][data.col].autoValue ='clear'  
-        } 
+          aSolved -=1;
+          this.state.grid[data.row][data.col].autoValue ='clear'
+        }
         else {
           aSolved += 1;
           this.state.grid[data.row][data.col].autoValue = data.fillPattern;
         }
       } else {
         if ((data.toggle)&&(this.state.grid[data.row][data.col].userValue === data.fillPattern)){
-          uSolved -= 1;  
+          uSolved -= 1;
           this.state.grid[data.row][data.col].userValue = 'clear';
         }else{
-          uSolved += 1;  
+          uSolved += 1;
           this.state.grid[data.row][data.col].userValue = data.fillPattern;
         }
-      }   
+      }
+    //something for updating clues here?
+    if (data.clue > -1){
+      console.log('data clue is > -1');
+      if (data.isRow === true){
+        console.log('row clue '+data.clue+' has been identified at '+data.cluePos)
+
+        this.state.rows[data.row][data.clue].solved = data.cluePos;
+        }else {
+        console.log('col clue '+data.clue+' has been identified at '+data.cluePos)
+        this.state.cols[data.col][data.clue].solved = data.cluePos;
+        }
+      }
     }
-  }  
-  this.forceUpdate();
-  this.state.aremaining -= aSolved;
-  this.state.uremaining -= uSolved;
+  }
+  var aRemaining = this.state.aremaining;
+  aRemaining -= aSolved;
+  var uRemaining = this.state.uremaining;
+  uRemaining -= uSolved;
+  this.setState({aremaining: aRemaining});
+  this.setState({uremaining: uRemaining});
   return aSolved+uSolved; //calling function will know which
 }
 
@@ -230,7 +225,7 @@ render(){
     <div id='game'>
     <div id='colspacer'>NonoSolver</div>
     <Column coldata={this.state.cols}/>
-    <Row rowdata={this.state.rows}/>
+    <Row rowdata={this.state.rows} rowUpdate={this.state.rupdate}/>
     <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid} show= {this.state.show}/>
     <Sidebar onclick={this.checkClick.bind(this)} onbutton={this.buttonClick.bind(this)}/>
     </div>

@@ -5,7 +5,7 @@ var Rows = function(options){
   var rowlength = options.rows.length;
   var row;
   for (var i = 0; i< rowlength; i++){
-  row = new Clues(options.rows[i]) 
+  row = new Clues(options.rows[i])
   results.push(row);
   }
   return results;

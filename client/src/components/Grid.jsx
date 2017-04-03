@@ -8,6 +8,8 @@ class Grid extends React.Component{
     this.state = {rows: options.griddata, onclick: this.props.onclick, show: this.props.show}
   }
 
+
+
   render(){
 
     var options = this.state.rows.map(function(row,index){

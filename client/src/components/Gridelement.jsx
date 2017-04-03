@@ -13,7 +13,7 @@ class Gridelement extends React.Component{
 
   componentDidUpdate(){
     var thisCell = document.querySelector('#'+this.state.cellId);
-    this.updateGridElement(thisCell)  
+    this.updateGridElement(thisCell)
      }
 
   updateGridElement(cell){
@@ -30,7 +30,7 @@ class Gridelement extends React.Component{
         displaying = this.state.cell.autoValue
         }else
         {
-        displaying = this.state.cell.userValue  
+        displaying = this.state.cell.userValue
         }
 
       if ((displaying === 'clear')||(displaying === "cross")){
@@ -48,7 +48,7 @@ class Gridelement extends React.Component{
         ctx.lineTo(30,140);
         ctx.stroke();
         }
-      }else 
+      }else
       {
       ctx.fillStyle = displaying;
       ctx.strokeStyle = "black";
@@ -56,8 +56,8 @@ class Gridelement extends React.Component{
       ctx.fillRect(0,0,280,200);
       }
 
-      
-      
+
+
 
   }
 
@@ -72,7 +72,7 @@ class Gridelement extends React.Component{
 
     return(
       <canvas className='gridelement' id={this.state.cellId} ref='canvas' style={divStyle} onClick={this.clickCell.bind(this)}>
-  
+
       </canvas>
       )
   }

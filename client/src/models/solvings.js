@@ -1,5 +1,111 @@
 var solvings = {
 
+  getLargestClue: function(clues){
+    if (clues.length === 0){return null}
+    var unsolved = clues.map(function(clue){
+        if (clue.solved === -1){return clue.number}else{return 0}
+      });
+    var largestClueLength = unsolved.sort()[clues.length-1];
+    var largestClueId = clues.findIndex(function(clue){
+      return clue.number === largestClueLength;
+    });
+    var largestClue = clues[largestClueId]
+    return largestClue;
+  },
+
+  getLastFreeCell: function(cells){
+  var i = cells.length-1;
+  var lastFreeFound = false;
+    while (!lastFreeFound){
+    if (i>0){
+    if (cells[i].autoValue==='cross'){
+        i--
+        } else {
+        lastFreeFound = true;
+        }
+      }else {lastFreeFound = true}
+    }
+  return i;
+  },
+
+  layoutIsLegal: function(test,ref){
+    var lengthOfArray;
+    var isLegal = true;
+    if ((test.length > 0)&&(ref.length > 0)){
+      if (test.length > ref.length){
+        lengthOfArray = test.length;
+      } else {
+        lengthOfArray = ref.length;
+      }
+    for (var i = 0; i< lengthOfArray; i++){
+      if ((i < test.length)&&(i < ref.length)){
+      // if test is a cross the other must be a cross or clear
+      // if test is filled the other must be filled or clear
+      if (test[i] != ref[i]){
+        if (test[i] === 'cross'){
+          if ((ref[i] != 'cross')&&(ref[i] != 'space')){
+            isLegal = false;
+            }
+          }
+        else if (test[i] !='space'){
+          if (ref[i] === 'cross'){isLegal = false}
+          }
+        }
+      } else {
+      //we're off the end. Just check the longer array doesn't have any filled blocks
+      if (i > test.length){
+        if ((ref[i] != 'cross')&&(ref[i] != 'clear')){isLegal = false}
+        } else
+        {
+        if ((test[i] != 'cross')&&(test[i] != 'clear')){isLegal = false}
+        }
+      }
+      }
+    }
+  return isLegal;
+  },
+
+  getBlockInfo: function(data){
+    var blockValues = [];
+    var blockLength = 0;
+    var blockData = {};
+    var blockInfo = []
+    for (var i = 0; i < data.cells.length; i++){
+      //nb - does not work for coloured puzzles at the moment
+      if ((data.cells[i].autoValue != 'cross')&&(data.cells[i].autoValue != 'clear')){
+        blockLength += 1;
+      }else{
+        if (blockLength > 0){
+          blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: data.cells[i-1].autoValue, clues:[]};
+          blockInfo.push(blockData)
+          blockLength = 0;
+        }
+      }
+    }
+    if (blockLength > 0){
+      blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: data.cells[i-1].autoValue, clues: []};
+      blockInfo.push(blockData)
+      blockLength = 0;
+    }
+  return blockInfo;
+  },
+
+  largestBlockEqualsLargestClue: function(data){
+      var largestClue = this.getLargestClue(data.clues);
+      var blockInfo = this.getBlockInfo(data);
+      var largestBlockSize = blockInfo.map(function(block){
+        return block.blocklength}).sort()[blockInfo.length-1];
+
+      var largestBlock = blockInfo[blockInfo.findIndex(function(block){
+        return block.blocklength === largestBlockSize})];
+
+      if (largestBlockSize === largestClue.number){
+        return largestBlock;
+      }else{
+        return null;
+      }
+  },
+
   overallClueLength: function(clues){
   var runningTotal = 0;
   if (clues.length === 0) return runningTotal;
@@ -11,31 +117,6 @@ var solvings = {
     }
   return runningTotal;
   },
-
-  getPlayable: function(data){
-    var cells = data;
-    var cellValues = data.map(function(cell){
-      return cell.autoValue;
-    })
-    if (cellValues.findIndex(function(currentValue){
-      return (currentValue === 'clear')
-    }) === -1){return []}
-
-      var firstFree = cellValues.findIndex(function(currentValue){
-        return (currentValue != 'cross');
-      });
-  //need to find last free space.
-  var lastFree = (cellValues.length -1);
-  var i = (cellValues.length -1);
-  while (cellValues[i] === 'cross'){
-    i--
-    lastFree = i
-  }
-  if (lastFree - firstFree === 0 )return [];
-  var result = cells.slice(0,lastFree+1)
-  result.splice(0,firstFree);
-  return result;
-},
 
 getDistinctSpaces: function(data){
   var result = [];
@@ -65,78 +146,146 @@ return result;
 },
 
 
-cluesWillFit: function(spaces,clues,colour){
+blocksMapToClues: function(spaces,blocks,clues,cells){
+var dataLength = this.getLastFreeCell(cells);
+if (blocks.length === 0){return 0}
+var clueLength = this.overallClueLength(clues);
+var range = dataLength - clueLength+1;
+var clueStart;
+var clueEnd;
+var blockStart;
+var blockEnd;
+var maxBlockStart = blocks[0].blockstart; //must be <= start of 1st block
+var minBlockEnd = blocks[blocks.length - 1].blockstart + blocks[blocks.length - 1].blocklength - 1; //must be >= end of last block
+var addClue;
+var clueId;
+var blockAlreadyIdentified;
+console.log('min block end '+minBlockEnd);
+console.log('max block start '+maxBlockStart);
+for (var i = 0; i< blocks.length; i++){
+  blockAlreadyIdentified = false;
+  blockStart = blocks[i].blockstart;
+  blockEnd = blocks[i].blockstart + blocks[i].blocklength - 1;
+  console.log('block start '+blockStart)
+  console.log('block end '+blockEnd)
+  console.log('range is '+range)
+
+  clueEnd = 0;
+  clueStart=0;
+  for (var clue = 0; clue < clues.length;clue++){
+    addClue = true;
+    clueId = clues[clue].solved;
+    if (clueId > -1){
+      if (clueId === blockStart){
+        console.log('this block is already known to be '+clue);
+        blocks[i].clues.splice(0,blocks[i].clues.length,clues[clue]);
+        blockAlreadyIdentified = true;
+        addClue = false;
+      }else{
+        console.log('this clue is already known to be a different block')
+        addClue = false;
+      }
+    }
+    clueEnd = clueStart + clues[clue].number - 1;
+
+    if ((clues[clue].number < blocks[i].blocklength)&&(addClue === true)){
+      addClue = false
+      console.log('length of clue less than length of block')
+    }
+    if ((blockEnd - clueEnd > range)&&(addClue === true)){
+      addClue = false
+      console.log('out of range')
+    }
+    if ((clueStart > blockStart)&&(addClue === true)){
+      addClue = false
+      console.log('clue cant be moved back far enough to match this block')
+    }
+    if ((clue === 0)&&((blockStart - clues[clue].number + 1) > maxBlockStart)&&(addClue === true)){
+      addClue = false
+      console.log('clue is not allowed to start after '+maxBlockStart)
+    }
+    if ((clue === clues.length - 1)&&(blockEnd+clues[clue].number-1 < minBlockEnd)&&(addClue === true)){
+      addClue = false
+      console.log('clue is not allowed to end before '+minBlockEnd)
+    }
+      if (addClue === true){
+        console.log('adding clue '+clue+' to block '+i)
+        blocks[i].clues.push(clues[clue])
+      }
+
+    if ((clue < clues.length - 1)&&(clues[clue].colour === clues[clue+1].colour)){clueEnd+=1}
+    clueStart = clueEnd+1;
+    };
+  };
+console.log(blocks)
+},
+
+cluesWillFit: function(spaces,clues,colour,blocks){
   //will the provided clues fit in the provided spaces
   var result = true;
-  if (clues.length === 0) {return result};
-  if ((spaces.length ===0)&&(clues.length > 0)){return false}
+  clueLength = this.overallClueLength(clues);
+  if ((spaces.length ===0)&&(clueLength > 0)){return false}
+
   var spaceValues = spaces.map(function(space){
     return space.spacelength;
   });
   var clueValues = clues.map(function(clue){
     return clue.number;
   });
+
   var spaceLength =0;
   var clueLength = 0;
-  if (spaceValues.length > 0){
+  if (spaces.length > 0){
     spaceLength = spaceValues.reduce(function(total,num){
       return total+num;})
   };
-  if (clueValues.length > 0){
-    clueLength = clueValues.reduce(function(total,num){
-        return total+num;})
-  };
+
 
   if (spaceLength >= clueLength){
       //only concerned with first legal arrangement
       var spaceNo=0;
-      var spaceLeft = spaceValues[0];
+      var spaceLeft = spaceValues[spaceNo];
       var finished;
+      var spaceEnd;
+      if ((clues.length === 0)&&(blocks.length > 0)){
+        if (spaces.length > 0){
+        //ok, is there a block between in this space? if so it MUST fail
+          for (var blockNo = 0;blockNo < blocks.length;blockNo++){
+            if ((blocks[blockNo].blockstart >= spaces[spaceNo].spacestart)
+            &&(blocks[blockNo].blockstart)<(spaces[spaceNo].spacestart + spaces[spaceNo].spacelength)){
+            result = false;
+            }
+          }
+        }
+      }
       for (var i = 0; i< clueValues.length;i++){
-        // console.log('looking at clue '+i)
-        // console.log(clueValues[i])
         finished = false;
         while (!finished){
-        // console.log('not finished')
-        // for each clue, will it fit? yes, reduce spaceLeft, no, increment spaceNo
         if (clueValues[i]<=spaceLeft){
-        // console.log('fits')
-        //it fits. reduce remaining space;
         if (!colour){
         spaceLeft -= clueValues[i]+1;
         }else{
-          //coloured puzzle - only add 1 if colours are the same
           spaceLeft -= clueValues[i]
           if ((i<clueValues.length-1)&&(clues[i].colour === clues[i+1].colour)){
-            // console.log('extra space removed because colours are the same')
             spaceLeft -= 1}
           }
         finished = true;
         } else{
-        // console.log('doesnt fit')
-        //it doesn't fit.
-        //move to next space if there is one
         if (spaceNo < spaceValues.length - 1){
           spaceNo += 1;
-          // console.log('move to space '+spaceNo)
           spaceLeft = spaceValues[spaceNo];
           }else{
-          // console.log('no spaces left')
-          result =  false;
-          finished = true;
+            result =  false;
+            finished = true;
+            }
           }
         }
       }
-
-      }
     } else result = false;
-  // if (result === true){
-  //   console.log(clueValues+' fits into '+spaceValues);
-  // } else {console.log(clueValues+' does not fit into '+spaceValues);}
   return result;
 },
 
-clueDistribution: function(spaces,clues,colour){
+clueDistribution: function(spaces,clues,colour,blocks){
   var previousSpace = [];
   var previousData = [];
   var currentSpace = [];
@@ -177,158 +326,151 @@ clueDistribution: function(spaces,clues,colour){
       currentData.push(clues[i])
       }
 
-
     done = false;
-    while (!done){
+      while (!done){
       currentDataLength = this.overallClueLength(currentData);
-
-      if (this.cluesWillFit(remainingSpace,remainingData,colour)&&(this.cluesWillFit(previousSpace,previousData,colour))){
-      if (currentDataLength <= currentSpaceLength){
-        for (var i = 0; i< currentData.length; i++){
-          offsetClueID = i+offset;
-          offsetClue = clues[offsetClueID];
-          if (spaces[space].clues.indexOf(offsetClue) === -1){
-                spaces[space].clues.push(offsetClue);}
+      if (this.cluesWillFit(remainingSpace,remainingData,colour,blocks)){
+        if (this.cluesWillFit(previousSpace,previousData,colour,blocks)){
+          if (currentDataLength <= currentSpaceLength){
+            for (var i = 0; i< currentData.length; i++){
+              offsetClueID = i+offset;
+              offsetClue = clues[offsetClueID];
+              if (spaces[space].clues.indexOf(offsetClue) === -1){
+              spaces[space].clues.push(offsetClue)}
+              }
             }
           }
-        remainingData.unshift(currentData.pop());
-        if (currentData.length === 0){done = true}
-      }else{
-      done = true;
+        }
+      remainingData.unshift(currentData.pop());
+      if (currentData.length === 0){done = true}
       }
     }
-  }
   //end second loop
   }
 return spaces;
 },
 
+//solving techniques:
+
 identifyBlocks: function(data){
+var thisBlock;
+var nextBlock;
 var results = [];
 var updateInfo = {};
-//can we work out what clues the existing blocks are part of?
-var cells = data.cells;
-// console.log('cells.length'+cells.length)
-// var playable = this.getPlayable(cells);
-// console.log('playable.length'+playable.length)
-var cellValues = cells.map(function(cell){
-  return cell.autoValue;
-});
-var firstFilled = cellValues.findIndex(function(currentValue){
-  return ((currentValue != 'cross')&&(currentValue != 'clear'))
-});
-var unfilled = cellValues.findIndex(function(currentValue){
-  return (currentValue === 'clear')
-});
-if ((firstFilled > -1)&&(unfilled > -1)){
-  var clues = data.clues;
-  var clueValues = clues.map(function(clue){
-    return clue.number;
-  });
-  var blockValues = [];
-  var blockLength = 0;
-  var blockData = {};
-  var blockInfo = []
-  for (var i = 0; i < cellValues.length; i++){
+var blockInfo = this.getBlockInfo(data);
+var spaceDist = this.getDistinctSpaces(data.cells)
+var fillStart;
+var fillEnd;
+var fillColour;
+var startCrossPos;
+var endCrossPos;
+var clueId;
+var cluePos;
+var skipNext=0;
+var blockProcessed = false;
 
-    if ((cellValues[i] != 'cross')&&(cellValues[i] != 'clear')){
-      blockLength += 1;
-    }else{
-      if (blockLength > 0){
-        blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: cellValues[i-1]};
-        blockInfo.push(blockData)
-        blockLength = 0;
-      }
-    }
-  }
-  if (blockLength > 0){
-    blockData = {blocklength: blockLength, blockstart: (i - blockLength), blockcolour: cellValues[i-1]};
-    blockInfo.push(blockData)
-    blockLength = 0;
-  }
-
-// if the largest block === the largest clue we can put crosses at
-// either end
-if (!data.colour){
-
-  var largestClue = clueValues.sort()[clueValues.length-1];
-
-  var largestBlockSize = blockInfo.map(function(block){
-    return block.blocklength}).sort()[blockInfo.length-1];
-
-  var largestBlock = blockInfo[blockInfo.findIndex(function(block){
-    return block.blocklength === largestBlockSize})];
-
-  if (largestBlockSize === largestClue){
-
-    var crossPos = largestBlock.blockstart-1
-    if ((crossPos >= 0)&&(cells[crossPos].autoValue != 'cross')){
-      console.log('updating with cross'+crossPos)
-      updateInfo= {row: cells[crossPos].cellRow, col: cells[crossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false}
-      results.push(updateInfo);
-    }
-    crossPos = largestBlock.blockstart+largestBlock.blocklength;
-    if  ((crossPos < cells.length)&&(cells[crossPos].autoValue != 'cross')){
-      console.log('updating with cross'+crossPos)
-      updateInfo= {row: cells[crossPos].cellRow, col: cells[crossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false}
-      results.push(updateInfo);
-    }
-  }
-}
-
-// blocks at start and end can be identified
-var startingBlock = blockInfo.findIndex(function(block){
-  return block.blockstart === 0});
-var firstClue = clues[0];
-if (startingBlock > -1){
-  for (var i=0; i< firstClue.number;i++){
-    if (cells[i].autoValue != firstClue.colour){
-      console.log('updating with block colour'+i)
-      updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false}
-      results.push(updateInfo);
-    }
-  }
-if (cells[firstClue.number+1].autoValue != 'cross'){
-  console.log('updating with cross'+firstClue.number+1)
-  updateInfo= {row: cells[firstClue.number+1].cellRow, col: cells[firstClue.number+1].cellCol, fillPattern: 'cross', auto:true, toggle:false}
-  results.push(updateInfo);
-}
-
-}
-
-var endingBlock = blockInfo.findIndex(function(block){
-  return block.blockstart+block.blocklength === cells.length});
-var lastClue = clues[clues.length -1];
-if (endingBlock > -1){
-  for (var i=blockInfo[endingBlock].blockstart; i>= cells.length-lastClue.number;i--){
-    if (cells[i].autoValue != lastClue.colour){
-      console.log('updating with block colour'+i)
-      updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: lastClue.colour, auto:true, toggle:false}
-      results.push(updateInfo);
-    }
-  }
-if (cells[cells.length-lastClue.number-1].autoValue != 'cross'){
-  console.log('update with cross')
-  updateInfo= {row: cells[cells.length-lastClue.number-1].cellRow, col: cells[cells.length-lastClue.number-1].cellCol, fillPattern: 'cross', auto:true, toggle:false}
-  results.push(updateInfo);
-}
-
-}
 if (blockInfo.length > 0){
-  var firstBlock = blockInfo[0];
-  if (firstBlock.blockstart === firstClue.number){
-    var startPoint = firstBlock.blockstart - firstClue.number;
-    var endPoint = (startPoint+firstBlock.blocklength)
-    for (var i= startPoint; i < endPoint; i++){
-      if (cells[i].autoValue != 'cross'){
-        console.log('update with cross'+i)
-        updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: 'cross', auto:true, toggle:false}
+  this.blocksMapToClues(spaceDist,blockInfo,data.clues,data.cells);
+  for (var bl = 0; bl < blockInfo.length; bl ++){
+    if (skipNext === 0){
+      blockProcessed = false;
+      thisBlock = blockInfo[bl];
+      if (bl < blockInfo.length-1){
+        nextBlock = blockInfo[bl + 1];
+      } else {
+        nextBlock = null;
+      }
+    console.log('Block number '+bl)
+    console.log(thisBlock);
+    console.log(nextBlock)
+    fillStart = -1;
+    fillEnd = -1;
+    fillColour = 'clear'
+    startCrossPos = -1;
+    endCrossPos = -1;
+    clueId = -1;
+    cluePos = -1;
+
+    //Single clues: Step 1: See if the next block has the same clue
+    if (thisBlock.clues.length === 1){
+      //probably should scan to catch all with same clue. This only catches 2
+      console.log('single clue on block '+bl)
+      if ((nextBlock != null)&&(nextBlock.clues.length === 1)){
+        console.log('single clue on following block')
+
+        if (thisBlock.clues[0] === nextBlock.clues[0]){
+          console.log('split clue detected')
+          fillStart = thisBlock.blockstart+thisBlock.blocklength;
+          fillEnd = nextBlock.blockstart;
+          fillColour = thisBlock.clues[0].colour;
+          if (nextBlock.blockstart+nextBlock.blocklength - thisBlock.blockstart === thisBlock.clues[0].number){
+            startCrossPos = thisBlock.blockstart -1;
+            endCrossPos = nextBlock.blockstart+nextBlock.blocklength;
+            clueId = data.clues.indexOf(thisBlock.clues[0]);
+            cluePos = thisBlock.blockstart;
+            }
+          skipNext = 1;
+          blockProcessed = true;
+          };
+
+        if ((blockProcessed === false)&&(data.clues.indexOf(nextBlock.clues[0]) - data.clues.indexOf(thisBlock.clues[0])===1)){
+          //next block identified
+          //check limits
+          console.log('following clue identified but not same as current')
+          fillStart = thisBlock.blockstart+thisBlock.clues[0].number;
+          fillEnd = nextBlock.blockstart+nextBlock.blocklength - nextBlock.clues[0].number;
+          fillColour = 'cross'
+          blockProcessed = true;
+          };
+        };
+
+      if (blockProcessed === false){
+        //next block not identified or non existent
+        console.log('next block not identified')
+        if (thisBlock.blocklength === thisBlock.clues[0].number){
+          fillStart = thisBlock.blockstart;
+          fillEnd = thisBlock.blockstart+1;
+          fillColour = thisBlock.clues[0].colour;
+          startCrossPos = thisBlock.blockstart -1;
+          endCrossPos = thisBlock.blockstart+thisBlock.blocklength;
+          clueId = data.clues.indexOf(thisBlock.clues[0]);
+          cluePos = thisBlock.blockstart;
+          }
+        }
+      }; //single clue associated with this block
+
+    if (blockProcessed === false){
+      //block is not identified at all. See if we can identify it.
+    }
+
+
+    if ((fillStart > -1)&&(fillEnd > -1)&&(fillEnd > fillStart)){
+    if (clueId > -1){
+      console.log('clue Id is '+clueId+' at position '+cluePos)
+      }
+    if ((startCrossPos > -1)&&(data.cells[startCrossPos].autoValue != 'cross')){
+      console.log('adding start cross at '+startCrossPos)
+      updateInfo= {row: data.cells[startCrossPos].cellRow, col: data.cells[startCrossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false, isRow:data.row, clue:-1, cluePos:-1}
+      results.push(updateInfo);
+      }
+    for (var j = fillStart; j< fillEnd; j++){
+      if (data.cells[j] != fillColour){
+        console.log('filling with '+fillColour+' at '+j)
+        updateInfo= {row: data.cells[j].cellRow, col: data.cells[j].cellCol, fillPattern: fillColour, auto:true, toggle:false, isRow:data.row, clue: clueId, cluePos: cluePos}
         results.push(updateInfo);
+        }
+      }
+    if ((endCrossPos > -1)&&(endCrossPos<data.cells.length)&&(data.cells[endCrossPos].autoValue != 'cross')){
+      console.log('adding end cross at '+endCrossPos)
+      updateInfo= {row: data.cells[endCrossPos].cellRow, col: data.cells[endCrossPos].cellCol, fillPattern: 'cross', auto:true, toggle:false, isRow:data.row, clue:-1, cluePos:-1}
+      results.push(updateInfo);
       }
     }
+  } else {
+  console.log('skip next');
+  skipNext -=1;
   }
 }
-
 
 }
 return results;
@@ -357,7 +499,7 @@ for (var i=0; i< cells.length; i++){
   if ((i<(lastFilled - clue.number+1))||(i>(firstFilled+clue.number -1))){
     if (cells[i].autoValue !='cross'){
       console.log('single clue updating with cross '+i)
-      updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: 'cross', auto:true, toggle:false}
+      updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: 'cross', auto:true, toggle:false, isRow:data.row, clue:-1, cluePos:-1}
       results.push(updateInfo);
     };
   }
@@ -390,7 +532,7 @@ edgeProximity: function(data){
     for (var i=firstFilled+1;i< firstClue.number; i++){
       if (cells[i].autoValue !=firstClue.colour){
         console.log('edge proximity - updating with colour '+i)
-        updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false}
+        updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false, isRow:data.row, clue:-1, cluePos:-1}
         results.push(updateInfo);
       };
     }
@@ -399,7 +541,7 @@ edgeProximity: function(data){
     for (var i=cells.length-lastClue.number; i< lastFilled; i++){
       if (cells[i].autoValue !=firstClue.colour){
         console.log('edge proximity - updating with colour '+i)
-        updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false}
+        updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: firstClue.colour, auto:true, toggle:false, isRow:data.row, clue:-1, cluePos:-1}
         results.push(updateInfo);
       };
     }
@@ -411,8 +553,8 @@ return results;
 overlap: function(data){
   var results = [];
   var cells = data.cells;
-  var clues = data.clues;
   var updateInfo = {};
+  var blockInfo = this.getBlockInfo(data)
 
   for (var i=0; i< data.cells.length; i++){
     cells[i].testValue1 = -1;
@@ -420,11 +562,12 @@ overlap: function(data){
     cells[i].testColour = 'clear';
   }
 
-  if (clues.length > 0){
+  if (data.clues.length > 0){
   // occasionally you get rows with no clues at all!
   var spaces = this.getDistinctSpaces(cells);
-  this.clueDistribution(spaces,clues,data.colour);
+  this.clueDistribution(spaces,data.clues,data.colour,blockInfo);
 
+  //first, if a space has no clues at all it *must* be filled with crosses
   for (var i=0; i< spaces.length; i++){
     if(spaces[i].clues.length === 0){
       var spaceStart = spaces[i].spacestart;
@@ -432,7 +575,7 @@ overlap: function(data){
       for (var j=spaceStart; j< spaceEnd; j++){
         if (cells[j].autoValue != 'cross'){
           console.log('overlap - updating with cross '+j)
-          updateInfo= {row: cells[j].cellRow, col: cells[j].cellCol, fillPattern: 'cross', auto:true, toggle:false}
+          updateInfo= {row: cells[j].cellRow, col: cells[j].cellCol, fillPattern: 'cross', auto:true, toggle:false, isRow:data.row, clue:-1, cluePos:-1}
           results.push(updateInfo);
         }else{console.log('cross value already set')}
       }
@@ -441,49 +584,39 @@ overlap: function(data){
 
   var count;
   var index;
-  for (var i=0;i<clues.length;i++){
-      //does this clue appear in more than one space?
+  for (var i=0;i<data.clues.length;i++){
       count = 0;
       for (var j = 0; j < spaces.length; j++){
-        if (spaces[j].clues.indexOf(clues[i]) > -1){
+        if (spaces[j].clues.indexOf(data.clues[i]) > -1){
           count +=1;
         }
       }
       if (count > 1){
-        console.log('multiple instances')
-        //remove all instances of that clue from spaces
         for (var j = 0; j < spaces.length; j++){
-          index = spaces[j].clues.indexOf(clues[i]);
+          index = spaces[j].clues.indexOf(data.clues[i]);
           if (index>-1){
-            console.log('removing multiples')
             spaces[j].clues.splice(index,1)}
           }
         }
       }
     //now each space will contain clues that can't be anywhere else
-    //for each space do an overlap check
     var offset=0;
     var startpoint=0;
     var endpoint=0;
     var totalLength;
     var clueLengths;
     var selectedClues =[];
-    var myClues = clues;
+    var myClues = data.clues;
     var clueNumber;
-    console.log('looking at spaces')
     for (var space = 0; space < spaces.length;space++){
+
     totalLength = this.overallClueLength(spaces[space].clues);
-    console.log('total length '+totalLength)
     if (totalLength > (spaces[space].spacelength)/2){
       offset = spaces[space].spacelength - totalLength;
       startpoint = spaces[space].spacestart;
       endpoint = startpoint;
-      console.log('offset '+offset)
-      console.log('start '+startpoint);
-      console.log(selectedClues)
       for (var i=0;i<spaces[space].clues.length;i++){
         endpoint += spaces[space].clues[i].number;
-        console.log('end '+endpoint)
           for (var j=startpoint; j<endpoint;j++){
             cells[j].testValue1 = i;
             cells[j].testColour = spaces[space].clues[i].colour;
@@ -491,7 +624,6 @@ overlap: function(data){
             cells[j+offset].testValue2 = i;
           }
         startpoint = endpoint;
-        console.log(endpoint)
         if ((i<spaces[space].clues.length-1)&&(spaces[space].clues[i].colour === spaces[space].clues[i+1].colour)){
             cells[startpoint].testValue1 = -1;
             cells[startpoint].testColour = 'cross';
@@ -508,7 +640,7 @@ overlap: function(data){
             if ((cells[i].testValue1 > -1)&&(cells[i].testValue1 === cells[i].testValue2)){
               if (cells[i].autoValue != cells[i].testColour){
                 console.log('overlap - updating with colour '+i)
-                updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: cells[i].testColour, auto:true, toggle:false}
+                updateInfo= {row: cells[i].cellRow, col: cells[i].cellCol, fillPattern: cells[i].testColour, auto:true, toggle:false, isRow:data.row, clue:-1, cluePos:-1}
                 results.push(updateInfo);
               }else {console.log('value already set'+i)}
             }
