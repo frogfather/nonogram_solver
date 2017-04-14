@@ -6,8 +6,7 @@ class Dataelement extends React.Component{
     this.state={number:options.data, solved:options.solved}
     }
 
-    componentDidUpdate(){
-    }
+    
 
   render(){
     var divStyle;

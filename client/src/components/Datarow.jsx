@@ -3,14 +3,14 @@ import Dataelement from '../components/Dataelement'
 class Datarow extends React.Component{
 constructor(options){
   super(options)
-  this.state = {data:options.data, update: options.update}
+  this.state = {data:options.data}
   }
 
 
 
   render(){
     var options = this.props.data.map(function(clue,index){
-      return <Dataelement value={index} key={index} solved={clue.solved} data={clue.number} update={this.state.update}/>
+      return <Dataelement value={index} key={index} solved={clue.solved} data={clue.number}/>
     }.bind(this))
 
 

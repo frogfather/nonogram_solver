@@ -4,14 +4,14 @@ class Row extends React.Component{
 
   constructor(options){
   super(options)
-  this.state = {data: options.rowdata, update: options.rupdate}
+  this.state = {data: options.rowdata}
   }
 
-  
+
   render(){
 
     var options = this.props.rowdata.map(function(rowdata,index){
-      return <Datarow value={index} key={index} data={rowdata} update={this.state.update}/>
+      return <Datarow value={index} key={index} data={rowdata}/>
     }.bind(this))
 
     return(

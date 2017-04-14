@@ -16,7 +16,7 @@ class Game extends React.Component{
 
     var game = new Gamedata();
     var gameSize = game.grid[0].length * game.grid.length
-    this.state = {rows:game.rows, rupdate: 1, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize}
+    this.state = {rows:game.rows, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize}
   }
 
 
@@ -129,7 +129,7 @@ generalOverlap(){
   var cellsFilled = 0;
   var updateData;
   for (var row = 0; row< this.state.rows.length;row++){
-    console.log('ROW '+row+' xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+    console.log('ROW '+row)
     updateData =  solvings.overlap({cells: this.state.grid[row], clues: this.state.rows[row], colour: false, row: true});
     cellsFilled += this.updateCells(updateData)
   }
@@ -139,7 +139,7 @@ generalOverlap(){
     for (var row = 0; row < this.state.rows.length; row++){
       column.push(this.state.grid[row][col]);
     }
-    console.log('COL '+col+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+    console.log('COL '+col)
     updateData = solvings.overlap({cells: column, clues: this.state.cols[col], colour: false, row: false})
     cellsFilled += this.updateCells(updateData)
   }
@@ -147,6 +147,7 @@ generalOverlap(){
 }
 
 solveThePuzzle(){
+  var remaining = 0;
   var totalSolved =0;
   var solved;
   var noneSolved = false;
@@ -163,7 +164,17 @@ solveThePuzzle(){
   console.log('Single clue solved '+solved);
   totalSolved += solved;
   solved = this.identifyBlocks();
+  console.log('identify blocks solved '+solved);
+  totalSolved += solved;
   console.log('total solved on this pass'+totalSolved)
+  remaining = this.state.aremaining;
+  remaining -= totalSolved;
+  this.setState({aremaining: remaining})
+  if (remaining > 0){
+    console.log('Remaining '+remaining)
+    } else {
+    console.log('Puzzle is solved - Yay!')
+    }
   }
 
   buttonClick(event){
@@ -181,7 +192,7 @@ solveThePuzzle(){
           aSolved -=1;
           this.state.grid[data.row][data.col].autoValue ='clear'
         }
-        else {
+        else if ((this.state.grid[data.row][data.col].autoValue === 'clear')&&(data.fillPattern != 'clear')){
           aSolved += 1;
           this.state.grid[data.row][data.col].autoValue = data.fillPattern;
         }
@@ -196,24 +207,14 @@ solveThePuzzle(){
       }
     //something for updating clues here?
     if (data.clue > -1){
-      console.log('data clue is > -1');
       if (data.isRow === true){
-        console.log('row clue '+data.clue+' has been identified at '+data.cluePos)
-
         this.state.rows[data.row][data.clue].solved = data.cluePos;
         }else {
-        console.log('col clue '+data.clue+' has been identified at '+data.cluePos)
         this.state.cols[data.col][data.clue].solved = data.cluePos;
         }
       }
     }
   }
-  var aRemaining = this.state.aremaining;
-  aRemaining -= aSolved;
-  var uRemaining = this.state.uremaining;
-  uRemaining -= uSolved;
-  this.setState({aremaining: aRemaining});
-  this.setState({uremaining: uRemaining});
   return aSolved+uSolved; //calling function will know which
 }
 
@@ -225,7 +226,7 @@ render(){
     <div id='game'>
     <div id='colspacer'>NonoSolver</div>
     <Column coldata={this.state.cols}/>
-    <Row rowdata={this.state.rows} rowUpdate={this.state.rupdate}/>
+    <Row rowdata={this.state.rows}/>
     <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid} show= {this.state.show}/>
     <Sidebar onclick={this.checkClick.bind(this)} onbutton={this.buttonClick.bind(this)}/>
     </div>
