@@ -4,7 +4,7 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "test": "mocha solvings_spec.js" ,
+    "test": "mocha solvings_spec.js",
     "start": "webpack -w"
   },
   "keywords": [],
@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "react-dom": "^15.3.2",
+    "react-scrollable-list": "^1.1.3"
   }
 }

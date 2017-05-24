@@ -13,12 +13,12 @@ class Game extends React.Component{
   constructor(options){
     super(options)
     var puzzles = new Puzzles();
+    puzzles.all()
 
     var game = new Gamedata();
     var gameSize = game.grid[0].length * game.grid.length
     this.state = {rows:game.rows, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize}
   }
-
 
   gridClick(options){
     if (this.state.show === "user"){
@@ -28,33 +28,6 @@ class Game extends React.Component{
     this.updateCells([{row: row, col: col, fillPattern: this.state.selected, auto:false, toggle:true, isRow: true, clue: -1, cluePos: -1}]);
   }
 
-}
-
-checkClick(event){
-  var ischecked = event.target.checked;
-  if (event.target.id === 'ckcross'){
-    console.log(this.state.aremaining)
-    if (ischecked){
-      this.state.selected = 'cross';
-    }else
-    {
-      this.state.selected = 'blue'
-    }
-  }else if (event.target.id ==='ckauto'){
-    var showState;
-    if (ischecked) {
-      this.setState({show: 'auto'})
-      showState = 'auto';
-    }else{
-      this.setState({show: 'user'})
-      showState = 'user';
-    }
-    for (var y = 0; y< this.state.cols.length; y++){
-      for (var x = 0; x< this.state.rows.length; x++){
-        this.state.grid[x][y].show = showState;
-      }
-    }
-  }
 }
 
 identifyBlocks(){
@@ -177,9 +150,6 @@ solveThePuzzle(){
     }
   }
 
-  buttonClick(event){
-   this.solveThePuzzle();
- }
 
  updateCells(options){
   if (options){
@@ -222,14 +192,12 @@ solveThePuzzle(){
 
 render(){
   return(
-    <div id='content'>
+
     <div id='game'>
     <div id='colspacer'>NonoSolver</div>
     <Column coldata={this.state.cols}/>
     <Row rowdata={this.state.rows}/>
     <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid} show= {this.state.show}/>
-    <Sidebar onclick={this.checkClick.bind(this)} onbutton={this.buttonClick.bind(this)}/>
-    </div>
     </div>
     )
 }

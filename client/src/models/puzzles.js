@@ -5,6 +5,7 @@ var Puzzles = function(){
 
 Puzzles.prototype = {
 
+
   makeRequest: function(url, callback){
     var request = new XMLHttpRequest();
     request.open("GET", url);
@@ -12,26 +13,26 @@ Puzzles.prototype = {
     request.send();
   },
 
-  all: function(callback){
+  all: function(){
     var self = this;
     this.makeRequest("http://localhost:3000/api/puzzles", function(){
       if(this.status !== 200) return;
       var jsonString = this.responseText;
       var results = JSON.parse(jsonString);
-      var puzzles = self.populatePuzzles(results);
-      callback(puzzles)
-    });
+      var puzzleList = self.populatePuzzles(results);
+      console.log(puzzleList)
+      return puzzleList
+      });
   },
 
-  populatePuzzles: function(results){ //NEW
+  populatePuzzles: function(results){
     var puzzles = [];
-
     for(var result of results){
-      console.log(result)
       var puzzle = new Puzzle(result);
       puzzles.push(puzzle);
     }
     return puzzles;
+
   }
 
 }

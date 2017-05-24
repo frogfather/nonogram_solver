@@ -5,44 +5,43 @@ import Griddata from '../models/Griddata'
 
 var Gamedata = function(){
   var rows = new Rows({rows:[
-    //make colour an array the same length as data
-    {colour: 'black', data: [3], solved: -1},
-    {colour: 'black',data: [3,1], solved: -1},
-    {colour: 'black',data: [2,2,1,1], solved: -1},
-    {colour: 'black',data: [1,1,1,2,4], solved: -1},
-    {colour: 'black',data: [1,6,2,7], solved: -1},
-    {colour: 'black',data: [2,6,3], solved: -1},
-    {colour: 'black',data: [10,1], solved: -1},
-    {colour: 'black',data: [4], solved: -1},
-    {colour: 'black',data: [4], solved: -1},
-    {colour: 'black',data: [8], solved: -1},
-    {colour: 'black',data: [1,2,2], solved: -1},
-    {colour: 'black',data: [1,6,2], solved: -1},
-    {colour: 'black',data: [1,1,2,1], solved: -1},
-    {colour: 'black',data: [2,1,2,2], solved: -1},
-    {colour: 'black',data: [4,5], solved: -1}
+    [{colour: 'black', number: 3, solved: -1}],
+    [{colour: 'black',number: 3, solved: -1},{colour: 'black',number: 1, solved: -1}],
+    [{colour: 'black',number: 2, solved: -1},{colour: 'black',number: 2, solved: -1},{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 1, solved: -1}],
+    [{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 2, solved: -1},{colour: 'black',number: 4, solved: -1}],
+    [{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 6, solved: -1},{colour: 'black',number: 2, solved: -1},{colour: 'black',number: 7, solved: -1}],
+    [{colour: 'black',number: 2, solved: -1},{colour: 'black',number: 6, solved: -1},{colour: 'black',number: 3, solved: -1}],
+    [{colour: 'black',number: 10, solved: -1},{colour: 'black',number: 1, solved: -1}],
+    [{colour: 'black',number: 4, solved: -1}],
+    [{colour: 'black',number: 4, solved: -1}],
+    [{colour: 'black',number: 8, solved: -1}],
+    [{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 2, solved: -1},{colour: 'black',number: 2, solved: -1}],
+    [{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 6, solved: -1},{colour: 'black',number: 2, solved: -1}],
+    [{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 2, solved: -1},{colour: 'black',number: 1, solved: -1}],
+    [{colour: 'black',number: 2, solved: -1},{colour: 'black',number: 1, solved: -1},{colour: 'black',number: 2, solved: -1},{colour: 'black',number: 2, solved: -1}],
+    [{colour: 'black',number: 4, solved: -1},{colour: 'black',number: 5, solved: -1}],
     ]});
   var cols = new Cols({cols:[
-    {colour: 'black', data: [2], solved: -1},
-    {colour: 'black', data: [1,2,2], solved: -1},
-    {colour: 'black', data: [1,2,5], solved: -1},
-    {colour: 'black', data: [1,1,1,1], solved: -1},
-    {colour: 'black', data: [3,1,4], solved: -1},
-    {colour: 'black', data: [2,6,1], solved: -1},
-    {colour: 'black', data: [12], solved: -1},
-    {colour: 'black', data: [2,8], solved: -1},
-    {colour: 'black', data: [1,7,1], solved: -1},
-    {colour: 'black', data: [3,2,1,2], solved: -1},
-    {colour: 'black', data: [1,1,2,2], solved: -1},
-    {colour: 'black', data: [2,1,2,2], solved: -1},
-    {colour: 'black', data: [1,1,2,1], solved: -1},
-    {colour: 'black', data: [5,2], solved: -1},
-    {colour: 'black', data: [3,2], solved: -1},
-    {colour: 'black', data: [1,1], solved: -1},
-    {colour: 'black', data: [1], solved: -1},
-    {colour: 'black', data: [1], solved: -1},
-    {colour: 'black', data: [1], solved: -1},
-    {colour: 'black', data: [1], solved: -1}
+    [{colour: 'black', number: 2, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 2, solved: -1},{colour: 'black', number: 2, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 2, solved: -1},{colour: 'black', number: 5, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 1, solved: -1}],
+    [{colour: 'black', number: 3, solved: -1},{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 4, solved: -1}],
+    [{colour: 'black', number: 2, solved: -1},{colour: 'black', number: 6, solved: -1},{colour: 'black', number: 1, solved: -1}],
+    [{colour: 'black', number: 12, solved: -1}],
+    [{colour: 'black', number: 2, solved: -1},{colour: 'black', number: 8, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 7, solved: -1},{colour: 'black', number: 1, solved: -1}],
+    [{colour: 'black', number: 3, solved: -1},{colour: 'black', number: 2, solved: -1},{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 2, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 2, solved: -1},{colour: 'black', number: 2, solved: -1}],
+    [{colour: 'black', number: 2, solved: -1},{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 2, solved: -1},{colour: 'black', number: 2, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 2, solved: -1},{colour: 'black', number: 1, solved: -1}],
+    [{colour: 'black', number: 5, solved: -1},{colour: 'black', number: 2, solved: -1}],
+    [{colour: 'black', number: 3, solved: -1},{colour: 'black', number: 2, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1},{colour: 'black', number: 1, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1}],
+    [{colour: 'black', number: 1, solved: -1}]
     ]});
   var griddata = new Griddata(
     {grid: [
@@ -62,7 +61,7 @@ var Gamedata = function(){
     [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
     [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]]}
     );
-  this.name = 'test puzzle';
+  this.name = 'fencer';
   this.colours = [];
   this.rows = rows;
   this.cols = cols;
@@ -71,6 +70,7 @@ var Gamedata = function(){
     time: null,
     user: null
   }
+console.log(rows)
 }
 
 module.exports = Gamedata;

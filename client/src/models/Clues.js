@@ -3,9 +3,9 @@ import Clue from '../models/Clue';
 var Clues = function(options){
   var results = [];
   var clue1;
-  var cluelength = options.data.length;
+  var cluelength = options.length;
   for (var i=0; i< cluelength;i++){
-    clue1 = new Clue({colour: options.colour, number: options.data[i], solved: options.solved})
+    clue1 = new Clue({colour: options[i].colour, number: options[i].number, solved: options[i].solved})
     results.push(clue1)
   }
   return results;

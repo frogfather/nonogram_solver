@@ -10,13 +10,21 @@ body{
   height:100%;
 }
 
+#frame{
+  display: flex;
+  min-height: 100%;
+}
+
 #content{
+
 border: 1px solid red;
 min-height: 100%;
+flex-grow: 4;
+margin-bottom: 12px;
 }
 
 #game{
-display:flex;  
+display:flex;
 flex-wrap: wrap;
 border: 1px solid pink;
 /*width:50%;*/
@@ -45,10 +53,12 @@ background-color: #AA6666;
 
 
 #sidebar{
+border: 3px solid green;
 display:flex;
 flex-direction: column;
 background-color: gray;
 flex-grow: 1;
+margin-bottom: 12px;
 }
 
 
@@ -92,7 +102,7 @@ flex-grow: 1;
 
 #gridrow{
   display:flex;
-  flex-direction: row; 
+  flex-direction: row;
   background-color: #CCAA77;
   margin-bottom: 1px;
 }
