@@ -6,6 +6,7 @@ body{
   font-family: Futura;
   height: 100%
   }
+
 #app{
   height:100%;
 }
@@ -51,14 +52,31 @@ width: 80%;
 background-color: #AA6666;
 }
 
-
-#sidebar{
-border: 3px solid green;
+#sidepanel{
+border: 3px solid blue;
 display:flex;
 flex-direction: column;
 background-color: gray;
 flex-grow: 1;
 margin-bottom: 12px;
+}
+
+#sidebar{
+border: 3px solid green;
+background-color: yellow;
+}
+
+#controls{
+  border: 3px solid brown;
+  display:flex;
+  flex-direction: column;
+  background-color: pink;
+  flex-grow:1;
+}
+
+.react-scrollable-list{
+height: 600px;
+overflow-y:scroll;
 }
 
 

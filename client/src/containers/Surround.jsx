@@ -2,6 +2,7 @@ const React = require('react');
 import ajax from '../helpers/ajax'
 import Puzzle from '../models/puzzle'
 import Sidebar from '../components/Sidebar'
+import Controls from '../components/Controls'
 
 class Surround extends React.Component{
 
@@ -32,16 +33,21 @@ class Surround extends React.Component{
     if (this.state){
     return(
       <div id='frame'>
-      <div id='content'>
-      </div>
-      <Sidebar data = {this.state.puzzles} onbuttonclick={this.clickButton}/>
+        <div id='content'>
+        </div>
+        <div id='sidepanel'>
+        <Sidebar data = {this.state.puzzles}/>
+        <Controls onbuttonclick={this.clickButton}/>
+        </div>
       </div>
     )}
     else {
       return(
         <div id='frame'>
-        <div id='content'>
-        </div>
+          <div id='content'>
+          </div>
+          <div id='sidepanel'>
+          </div>
         </div>
       )
     }
