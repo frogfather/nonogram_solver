@@ -1,81 +1,145 @@
 html{
   height:100%;
+  overflow: hidden;
 }
-
-body{
-  font-family: Futura;
-  height: 100%
-  }
 
 #app{
   height:100%;
 }
 
+body{
+  display: flex;
+  flex-direction: column;
+  height: 100%
+  }
+
+button{
+
+}
+
 #frame{
   display: flex;
+  flex-direction: column;
   min-height: 100%;
 }
 
-#content{
+#header{
+display: flex;
+flex-basis: 0;
+flex-grow: 2;
+flex-direction: column;
+background-color: #A4C2C9;
+font-family: serif;
+font-size: 48pt;
+text-align: center;
+justify-content: center;
+border: 1px solid yellow;
+border-bottom: none;
+}
 
-border: 1px solid red;
-min-height: 100%;
-flex-grow: 4;
-margin-bottom: 12px;
+#content{
+  flex-basis: 0;
+  display: flex;
+  flex-grow: 6;
+  background-color: #749299;
+  /*background-color: #AA6666;*/
+}
+
+#left{
+display: flex;
+flex-direction: column;
+flex-basis: 0;
+flex-grow: 1;
+background-color: #749299;
+font-family: serif;
+font-size: 32pt;
+text-align: center;
+justify-content: center;
+text-overflow: ellipsis;
+border: 1px solid yellow;
+border-right: none;
 }
 
 #game{
-display:flex;
+  display:flex;
+  flex-basis: 0;
+  flex-grow: 4;
 flex-wrap: wrap;
-border: 1px solid pink;
-/*width:50%;*/
-/*margin: 0 auto;*/
+background-color: #749299;
+border: 1px solid yellow;
 }
 
-
-#colspacer{
-width: 20%;
-background-color: gray;
+#footer{
+display: flex;
+flex-grow: 2;
+flex-basis:0;
+flex-direction: column;
+background-color: #648289;
+font-family: serif;
+font-size: 24pt;
 text-align: center;
-font-family: "papyrus";
-font-size: 30px;
-color: #884444;
-padding-top: 25px;
-text-shadow: 2px 2px #555555;
+justify-content: center;
+}
 
+#gameupper{
+  display:flex;
+  flex-grow: 1;
+}
+
+#gamelower{
+  display:flex;
+  flex-grow: 1;
 }
 
 #column{
 display:flex;
 align-items: flex-end;
-width: 80%;
-background-color: #AA6666;
+background-color: #749299;
+/*background-color: #AA6666;*/
 }
 
 #sidepanel{
-border: 3px solid blue;
-display:flex;
-flex-direction: column;
-background-color: gray;
-flex-grow: 1;
-margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 0;
+  flex-grow: 1;
+  border: 1px solid yellow;
+  border-left: none;
+}
+
+#status{
+display: flex;
+  flex-grow: 1;
+  flex-basis: 0;
+  justify-content: center;
+  flex-direction: column;
+  border: 1px solid gray;
+  background-color: #749299;
+
 }
 
 #sidebar{
-border: 3px solid green;
-background-color: yellow;
+  flex-grow: 6;
+  flex-basis: 0;
+border: 1px solid #446269;
+background-color: #648289;
+text-indent: 4px;
+color: #143239;
 }
 
 #controls{
-  border: 3px solid brown;
+  flex-grow: 1;
+  flex-basis: 0;
+  border: 3px solid gray;
   display:flex;
   flex-direction: column;
   background-color: pink;
-  flex-grow:1;
+  border: 1px solid gray;
+  background-color: #749299;
+
 }
 
 .react-scrollable-list{
-height: 600px;
 overflow-y:scroll;
 }
 
@@ -84,16 +148,16 @@ overflow-y:scroll;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  background-color: #AA6666;
+  background-color: #749299;
+  /*background-color: #AA6666;*/
   width:20%;
-  /*height:80%;*/
 }
 
 #datarow{
   display: flex;
   background-color: #FFAA00;
   justify-content: flex-end;
-  /*margin-bottom: 1px;*/
+  margin-bottom: 1px;
 
 }
 #datacol{
@@ -106,16 +170,16 @@ overflow-y:scroll;
 #dataelement {
   background-color: #DDAA55;
   border: 1px solid white;
-  min-width: 20px;
-  min-height: 20px;
+  width: 20px;
+  height: 20px;
   text-align: center;
 }
 
 #grid{
   display:flex;
   flex-direction: column;
-  background-color: #CC9977;
-  width:60%;
+  background-color: #749299;
+  /*background-color: #AA6666;*/
 }
 
 #gridrow{

@@ -4,16 +4,14 @@ class Controls extends React.Component{
 
   constructor(props){
     super(props);
-    this.state={onclick: this.props.onclick, onbuttonclick: this.props.onbuttonclick}
+    this.state={onbuttonclick: this.props.onbuttonclick}
   }
 
   buttonClick(event){
     event.persist();
-    console.log(event)
     this.state.onbuttonclick(event)
   }
 
-  //sidebar should probably contain separate js objects for scrolling list and controls
 
   render(){
     var options = []
@@ -22,7 +20,7 @@ class Controls extends React.Component{
     }
     return(
       <div id='controls'>
-      <button type="button" onClick={this.buttonClick.bind(this)}>Click me!</button>
+      <button type="button" id="controlButton" onClick={this.buttonClick.bind(this)}>Click me!</button>
       </div>
 
       )

@@ -10,7 +10,7 @@ constructor(options){
 
   render(){
     var options = this.props.data.map(function(clue,index){
-      return <Dataelement value={index} key={index} solved={clue.solved} data={clue.number}/>
+      return <Dataelement value={index} key={index} solved={clue.solved} data={clue.number} esize={this.props.esize}/>
     }.bind(this))
 
 

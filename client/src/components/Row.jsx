@@ -9,9 +9,8 @@ class Row extends React.Component{
 
 
   render(){
-
     var options = this.props.rowdata.map(function(rowdata,index){
-      return <Datarow value={index} key={index} data={rowdata}/>
+      return <Datarow value={index} key={index} data={rowdata} esize={this.props.esize}/>
     }.bind(this))
 
     return(

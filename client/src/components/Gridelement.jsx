@@ -66,9 +66,7 @@ class Gridelement extends React.Component{
   }
 
   render(){
-    const divStyle = {}
-
-
+    const divStyle = {width: this.props.esize, height: this.props.esize}
 
     return(
       <canvas className='gridelement' id={this.state.cellId} ref='canvas' style={divStyle} onClick={this.clickCell.bind(this)}>

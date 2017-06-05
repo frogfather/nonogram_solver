@@ -20,7 +20,7 @@ Puzzles.prototype = {
       var jsonString = this.responseText;
       var results = JSON.parse(jsonString);
       var puzzleList = self.populatePuzzles(results);
-      console.log(puzzleList)
+      
       return puzzleList
       });
   },

@@ -17,7 +17,58 @@ class Game extends React.Component{
 
     var game = new Gamedata();
     var gameSize = game.grid[0].length * game.grid.length
-    this.state = {rows:game.rows, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize}
+    this.state = {rows:game.rows, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize, esize:20}
+  }
+
+  componentDidMount(){
+    var maxRow = this.getMaxClues(this.state.rows);
+    var maxCol = this.getMaxClues(this.state.cols);
+
+    var cheight = this.refs.gamecontainer.clientHeight
+    var cwidth = this.refs.gamecontainer.clientWidth
+
+    var maxVGrid = this.state.grid.length
+    var maxHGrid = this.state.grid[0].length
+
+    //so, max blocks vertically is rows+ colclues
+    //similarly, max blocks horizontally is cols + rowclues
+    //however, we want the squares of the grid to be square
+
+    var vBlocks = maxVGrid+maxCol
+    var hBlocks = maxHGrid+maxRow
+
+    var vBlockSize = 20;
+    var hBlockSize = 20;
+
+    if (cheight > 0 && cheight > 0){
+      vBlockSize = parseInt((cheight / vBlocks)-3, 10)
+      hBlockSize = parseInt((cwidth / hBlocks)-3, 10)
+    }
+
+    if (vBlockSize < hBlockSize){
+      hBlockSize = vBlockSize
+    }
+
+    //left margin on column data should be the width of the row data
+
+    var leftMargin = maxRow * (hBlockSize + 2)
+
+    console.log('Block size should be: '+hBlockSize)
+    console.log('Left margin should be '+leftMargin)
+
+    this.setState({esize: hBlockSize, lmargin: leftMargin})
+
+  }
+
+  getMaxClues(clues){
+    var maxLength = 0
+    if (clues.length === 0){return 0}
+    for(var i = 0; i< clues.length; i++){
+      if (clues[i].length > maxLength){
+        maxLength = clues[i].length
+      }
+    }
+  return maxLength
   }
 
   gridClick(options){
@@ -191,13 +242,20 @@ solveThePuzzle(){
 
 
 render(){
-  return(
+  console.log('rendering')
+  console.log(this.state.esize)
+  console.log(this.state.lmargin)
 
-    <div id='game'>
-    <div id='colspacer'>NonoSolver</div>
-    <Column coldata={this.state.cols}/>
-    <Row rowdata={this.state.rows}/>
-    <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid} show= {this.state.show}/>
+  return(
+    <div id='game' ref='gamecontainer'>
+    <div id='gameupper'>
+
+    <Column coldata={this.state.cols} esize={this.state.esize} lmargin={this.state.lmargin}/>
+    </div>
+    <div id='gamelower'>
+    <Row rowdata={this.state.rows} esize={this.state.esize}/>
+    <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid} show= {this.state.show} esize={this.state.esize}/>
+    </div>
     </div>
     )
 }
@@ -205,3 +263,4 @@ render(){
 }
 
 export default Game;
+//<div id='colspacer'>NonoSolver</div>

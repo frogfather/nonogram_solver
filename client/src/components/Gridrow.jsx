@@ -4,16 +4,14 @@ class Gridrow extends React.Component{
 
   constructor(props){
     super(props)
-    this.state = {row: props.data, onclick: props.onclick, rowno: props.value}
+    this.state = {row: props.data, onclick: props.onclick, rowno: props.value, esize: props.esize}
   }
 
 
   render(){
     var options = this.state.row.map(function(cell,index){
-      return <Gridelement onclick= {this.state.onclick} rowno={this.state.rowno} value={index} key={index} data={cell}/>
+      return <Gridelement onclick= {this.state.onclick} rowno={this.state.rowno} value={index} key={index} data={cell} esize={this.props.esize}/>
     }.bind(this))
-
-
 
     return(
       <div id='gridrow'>

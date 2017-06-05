@@ -7,10 +7,17 @@ class Sidebar extends React.Component{
     super(props);
   }
 
+  componentDidMount(){
+    var newState = {puzzles: this.props.data}
+    this.setState(newState)
+  }
+
   render(){
     var options = []
-    for (var i = 0; i<= 50;i++){
-      options.push({id: i, content: i*2})
+    if (this.state){
+      for (var i=0; i< this.state.puzzles.length;i++ ){
+        options.push({id: i, content: this.state.puzzles[i].name})
+      }
     }
     return(
       <div id='sidebar'>

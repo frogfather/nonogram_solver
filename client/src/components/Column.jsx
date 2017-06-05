@@ -6,15 +6,18 @@ constructor(options){
 super(options)
 this.state = {data: options.coldata}
 }
- 
+
 
   render(){
+    const divStyle = {
+        marginLeft: this.props.lmargin}
+
     var options = this.state.data.map(function(coldata,index){
-      return <Datacol value={index} key={index} data={coldata}/>
+      return <Datacol value={index} key={index} data={coldata} esize={this.props.esize}/>
     }.bind(this))
-    
+    console.log(divStyle)
     return(
-      <div id='column'>
+      <div id='column' style={divStyle}>
       {options}
       </div>
       )

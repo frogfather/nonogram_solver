@@ -70,7 +70,6 @@ var Gamedata = function(){
     time: null,
     user: null
   }
-console.log(rows)
 }
 
 module.exports = Gamedata;
