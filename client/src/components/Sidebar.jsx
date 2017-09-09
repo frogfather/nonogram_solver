@@ -8,8 +8,13 @@ class Sidebar extends React.Component{
   }
 
   componentDidMount(){
-    var newState = {puzzles: this.props.data}
+    var newState = {puzzles: this.props.data, onlistclick: this.props.onlistclick}
     this.setState(newState)
+  }
+
+  listClick(event){
+    event.persist()
+    this.state.onlistclick(event)
   }
 
   render(){
@@ -20,7 +25,7 @@ class Sidebar extends React.Component{
       }
     }
     return(
-      <div id='sidebar'>
+      <div id='sidebar' onClick = {this.listClick.bind(this)}>
       <ReactScrollableList listItems={options} heightOfItem={10} maxItemsToRender={30}/>
       </div>
       )

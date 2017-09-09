@@ -30,6 +30,16 @@ class Surround extends React.Component{
     console.log(event.target.id)
   }
 
+  clickPuzzleList(event){
+    console.log(event)
+    if (event.target.id === "sidebar"){
+    console.log('not on an item')
+  } else {
+    console.log(event.target.innerHTML)
+  }
+
+  }
+
   render(){
     if (this.state){
     return(
@@ -40,7 +50,7 @@ class Surround extends React.Component{
           <Game options={this.state.current}/>
           <div id='sidepanel'>
           <Status onbuttonclick={this.clickButton}/>
-          <Sidebar data = {this.state.puzzles}/>
+          <Sidebar data = {this.state.puzzles} onlistclick = {this.clickPuzzleList}/>
           <Controls onbuttonclick={this.clickButton}/>
           </div>
 

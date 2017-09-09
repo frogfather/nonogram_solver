@@ -242,7 +242,6 @@ solveThePuzzle(){
 
 
 render(){
-  console.log('rendering')
   console.log(this.state.esize)
   console.log(this.state.lmargin)
 
