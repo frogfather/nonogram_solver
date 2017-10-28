@@ -5,35 +5,39 @@ import Grid from '../components/Grid'
 import Sidebar from '../components/Sidebar'
 import Gamedata from '../models/Gamedata'
 import solvings from '../models/solvings'
-import Puzzles from '../models/puzzles'
+// import Puzzles from '../models/puzzles'
 import update from 'immutability-helper';
 
 class Game extends React.Component{
 
   constructor(options){
     super(options)
-    var puzzles = new Puzzles();
-    puzzles.all()
-
-    var game = new Gamedata();
-    var gameSize = game.grid[0].length * game.grid.length
-    this.state = {rows:game.rows, cols:game.cols, grid:game.grid, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize, esize:20}
+    console.log(this.props.options.current)
+    var game = this.props.options.current
+    var gameSize
+    if (game != null){
+    gameSize = game.grid[0].length * game.grid.length
+    } else {
+    gameSize = 0
+    }
+    this.state = {currentGame:game, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize, esize:20}
+    
   }
 
-  componentDidMount(){
-    var maxRow = this.getMaxClues(this.state.rows);
-    var maxCol = this.getMaxClues(this.state.cols);
-
+  componentWillReceiveProps(nextProps){
+    if (this.props.currentGame != null){
+      var maxRow = this.getMaxClues(this.props.current.rows);
+      var maxCol = this.getMaxClues(this.props.current.cols);
+      var maxVGrid = this.props.current.grid.length
+      var maxHGrid = this.props.current.grid[0].length
+    } else{
+      var maxRow = 0;
+      var maxCol = 0;
+      var maxVGrid = 0
+      var maxHGrid = 0
+    }
     var cheight = this.refs.gamecontainer.clientHeight
     var cwidth = this.refs.gamecontainer.clientWidth
-
-    var maxVGrid = this.state.grid.length
-    var maxHGrid = this.state.grid[0].length
-
-    //so, max blocks vertically is rows+ colclues
-    //similarly, max blocks horizontally is cols + rowclues
-    //however, we want the squares of the grid to be square
-
     var vBlocks = maxVGrid+maxCol
     var hBlocks = maxHGrid+maxRow
 
@@ -48,15 +52,12 @@ class Game extends React.Component{
     if (vBlockSize < hBlockSize){
       hBlockSize = vBlockSize
     }
-
-    //left margin on column data should be the width of the row data
-
     var leftMargin = maxRow * (hBlockSize + 2)
-
-    console.log('Block size should be: '+hBlockSize)
-    console.log('Left margin should be '+leftMargin)
-
-    this.setState({esize: hBlockSize, lmargin: leftMargin})
+    
+        console.log('Block size should be: '+hBlockSize)
+        console.log('Left margin should be '+leftMargin)
+    
+        this.setState({esize: hBlockSize, lmargin: leftMargin})
 
   }
 
@@ -242,23 +243,29 @@ solveThePuzzle(){
 
 
 render(){
+  console.log(this.props)
   console.log(this.state.esize)
   console.log(this.state.lmargin)
+  if (this.props.current != null){
+    return(
+      <div id='game' ref='gamecontainer'>
+      <div id='gameupper'>
 
-  return(
-    <div id='game' ref='gamecontainer'>
-    <div id='gameupper'>
-
-    <Column coldata={this.state.cols} esize={this.state.esize} lmargin={this.state.lmargin}/>
-    </div>
-    <div id='gamelower'>
-    <Row rowdata={this.state.rows} esize={this.state.esize}/>
-    <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid} show= {this.state.show} esize={this.state.esize}/>
-    </div>
-    </div>
-    )
-}
-
+      <Column coldata={this.state.cols} esize={this.state.esize} lmargin={this.state.lmargin}/>
+      </div>
+      <div id='gamelower'>
+      <Row rowdata={this.state.rows} esize={this.state.esize}/>
+      <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid} show= {this.state.show} esize={this.state.esize}/>
+      </div>
+      </div>
+      )
+    } else {
+      return(
+      <div id='game' ref='gamecontainer'>
+      </div>  
+      )
+    }
+  }
 }
 
 export default Game;

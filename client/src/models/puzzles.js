@@ -13,15 +13,14 @@ Puzzles.prototype = {
     request.send();
   },
 
-  all: function(){
+  all: function(callback){
     var self = this;
     this.makeRequest("http://localhost:3000/api/puzzles", function(){
       if(this.status !== 200) return;
       var jsonString = this.responseText;
       var results = JSON.parse(jsonString);
       var puzzleList = self.populatePuzzles(results);
-      
-      return puzzleList
+      callback(puzzleList)
       });
   },
 
@@ -29,6 +28,7 @@ Puzzles.prototype = {
     var puzzles = [];
     for(var result of results){
       var puzzle = new Puzzle(result);
+      console.log(puzzle)
       puzzles.push(puzzle);
     }
     return puzzles;

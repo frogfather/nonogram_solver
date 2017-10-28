@@ -31,28 +31,43 @@ class Surround extends React.Component{
   }
 
   clickPuzzleList(event){
-    console.log(event)
     if (event.target.id === "sidebar"){
-    console.log('not on an item')
   } else {
-    console.log(event.target.innerHTML)
+    if (event.target.innerHTML != "New puzzle"){
+      //find the puzzle and make it the current one
+      var myPuzzle = this.findPuzzle(event.target.innerHTML)
+      this.setState({current: myPuzzle})
+    } else {
+      console.log("new puzzle coming up!")
+    }
+    
   }
 
+  }
+
+  findPuzzle(name){
+    for (var puzzle of this.state.puzzles){
+      if (puzzle.name === name){
+        return puzzle
+       }
+      }
   }
 
   render(){
     if (this.state){
+      console.log("rendering")
+      console.log("current game is "+ this.state.current)
     return(
       <div id='frame'>
         <div id= 'header'>Nonograms!</div>
         <div id='content'>
-          <div id='left'> Left </div>
-          <Game options={this.state.current}/>
+
           <div id='sidepanel'>
           <Status onbuttonclick={this.clickButton}/>
-          <Sidebar data = {this.state.puzzles} onlistclick = {this.clickPuzzleList}/>
+          <Sidebar data = {this.state.puzzles} onlistclick = {this.clickPuzzleList.bind(this)} />
           <Controls onbuttonclick={this.clickButton}/>
           </div>
+          <Game options={this.state}/>
 
         </div>
         <div id='footer'>This is the footer</div>
