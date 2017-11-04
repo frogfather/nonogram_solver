@@ -12,24 +12,27 @@ class Game extends React.Component{
 
   constructor(options){
     super(options)
-    console.log(this.props.options.current)
-    var game = this.props.options.current
+    console.log(options)
+    var game = options.current
     var gameSize
     if (game != null){
     gameSize = game.grid[0].length * game.grid.length
     } else {
     gameSize = 0
     }
-    this.state = {currentGame:game, show:'user', selected: 'blue', uremaining:gameSize, aremaining:gameSize, esize:20}
+    this.state = {selected: 'blue', uremaining:gameSize, aremaining:gameSize, esize:20}
     
   }
 
   componentWillReceiveProps(nextProps){
-    if (this.props.currentGame != null){
-      var maxRow = this.getMaxClues(this.props.current.rows);
-      var maxCol = this.getMaxClues(this.props.current.cols);
-      var maxVGrid = this.props.current.grid.length
-      var maxHGrid = this.props.current.grid[0].length
+    //Is there a new game
+    if ((this.props.options.current != nextProps.options.current)&&(nextProps.options.current != null)){
+      console.log('props changing')
+      console.log(nextProps)
+      var maxRow = this.getMaxClues(nextProps.options.current.rows);
+      var maxCol = this.getMaxClues(nextProps.options.current.cols);
+      var maxVGrid = nextProps.options.current.grid.length
+      var maxHGrid = nextProps.options.current.grid[0].length
     } else{
       var maxRow = 0;
       var maxCol = 0;
@@ -40,18 +43,21 @@ class Game extends React.Component{
     var cwidth = this.refs.gamecontainer.clientWidth
     var vBlocks = maxVGrid+maxCol
     var hBlocks = maxHGrid+maxRow
-
-    var vBlockSize = 20;
-    var hBlockSize = 20;
-
-    if (cheight > 0 && cheight > 0){
+    console.log(vBlocks)
+    console.log(hBlocks)
+    
+    if (cheight > 0 && cwidth > 0 && vBlocks > 0 && hBlocks > 0){
       vBlockSize = parseInt((cheight / vBlocks)-3, 10)
       hBlockSize = parseInt((cwidth / hBlocks)-3, 10)
+    } else {
+      var vBlockSize = 20;
+      var hBlockSize = 20;
     }
 
     if (vBlockSize < hBlockSize){
       hBlockSize = vBlockSize
     }
+    console.log(maxRow)
     var leftMargin = maxRow * (hBlockSize + 2)
     
         console.log('Block size should be: '+hBlockSize)
@@ -204,7 +210,7 @@ solveThePuzzle(){
 
 
  updateCells(options){
-  if (options){
+   if (options){
     var uSolved = 0;
     var aSolved = 0;
     for (var i=0; i< options.length; i++){
@@ -243,19 +249,19 @@ solveThePuzzle(){
 
 
 render(){
-  console.log(this.props)
+  console.log(this.props.options.current)
   console.log(this.state.esize)
   console.log(this.state.lmargin)
-  if (this.props.current != null){
+  if (this.props.options.current != null){
     return(
       <div id='game' ref='gamecontainer'>
       <div id='gameupper'>
 
-      <Column coldata={this.state.cols} esize={this.state.esize} lmargin={this.state.lmargin}/>
+      <Column coldata={this.props.options.current.cols} esize={this.state.esize} lmargin={this.state.lmargin}/>
       </div>
       <div id='gamelower'>
-      <Row rowdata={this.state.rows} esize={this.state.esize}/>
-      <Grid onclick={this.gridClick.bind(this)} griddata={this.state.grid} show= {this.state.show} esize={this.state.esize}/>
+      <Row rowdata={this.props.options.current.rows} esize={this.state.esize}/>
+      <Grid onclick={this.gridClick.bind(this)} griddata={this.props.options.current.grid} show= {this.props.options.show} esize={this.state.esize}/>
       </div>
       </div>
       )
@@ -269,4 +275,4 @@ render(){
 }
 
 export default Game;
-//<div id='colspacer'>NonoSolver</div>
+

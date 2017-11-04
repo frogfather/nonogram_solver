@@ -20,7 +20,7 @@ class Surround extends React.Component{
         puzzleList.push(puzzle)
         }
       }
-    var newState = {puzzles: puzzleList, current: null}
+    var newState = {puzzles: puzzleList, current: null, show: 'user'}
     this.setState(newState)
     }.bind(this))
 
@@ -38,6 +38,7 @@ class Surround extends React.Component{
       var myPuzzle = this.findPuzzle(event.target.innerHTML)
       this.setState({current: myPuzzle})
     } else {
+      this.setState({current: null})
       console.log("new puzzle coming up!")
     }
     
@@ -55,8 +56,9 @@ class Surround extends React.Component{
 
   render(){
     if (this.state){
-      console.log("rendering")
+      console.log("rendering surround")
       console.log("current game is "+ this.state.current)
+      console.log(this.state)
     return(
       <div id='frame'>
         <div id= 'header'>Nonograms!</div>
