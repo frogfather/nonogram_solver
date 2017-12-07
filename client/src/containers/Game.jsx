@@ -28,7 +28,7 @@ class Game extends React.Component{
     //Is there a new game
     if ((this.props.options.current != nextProps.options.current)&&(nextProps.options.current != null)){
       console.log('props changing')
-      console.log(nextProps)
+      console.log(nextProps.options.current)
       var maxRow = this.getMaxClues(nextProps.options.current.rows);
       var maxCol = this.getMaxClues(nextProps.options.current.cols);
       var maxVGrid = nextProps.options.current.grid.length

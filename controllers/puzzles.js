@@ -10,4 +10,21 @@ puzzleRouter.get('/', function(req, res) {
   });
 });
 
+puzzleRouter.post('/', function(req, res){
+    query.add(req.body,function(docs){
+    var length = docs.length;
+    var returnedId = JSON.stringify(docs[length-1]);
+    res.json({data: returnedId});
+  })
+});
+
+puzzleRouter.delete('/',function(req,res){
+    query.delete(req.body,function(docs){
+      var length = docs.length;
+      var returnedId = JSON.stringify(docs[length-1]);
+      res.json({data: returnedId});
+    })
+});
+
+
 module.exports = puzzleRouter;

@@ -3,6 +3,8 @@ var ajax = {
 
   makeRequest: function(method, url, callback, payload){
     var request = new XMLHttpRequest();
+    console.log(method)
+    console.log(url)
     request.open(method, url);
     request.setRequestHeader("Content-type", "application/json");
     request.onload = function(){
@@ -22,8 +24,9 @@ var ajax = {
   },
 
   post: function(url, callback, payload){
+    console.log("post method")
     var data = JSON.stringify(payload);
-    this.makeRequest('POST',url,callback,data);
+    this.makeRequest('POST', url, callback, data);
   },
 
   delete: function(url, callback, payload){

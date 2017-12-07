@@ -28,6 +28,15 @@ class Surround extends React.Component{
 
   clickButton(event){
     console.log(event.target.id)
+    if (event.target.id === "controlButton"){
+      var url = "http://localhost:3000/api/puzzles"
+      ajax.post(url, function(data){
+        console.log("in post callback")
+        console.log(data)
+      },this.state)  
+    }
+
+
   }
 
   clickPuzzleList(event){
