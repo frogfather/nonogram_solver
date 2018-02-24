@@ -7,7 +7,6 @@ var NonoQuery = function(){ //NEW
 NonoQuery.prototype = {
 
   all: function(onQueryFinished){
-    console.log("mongo client all")
     MongoClient.connect(this.url, function(err, db) {
         var collection = db.collection('puzzles');
         collection.find().toArray(function(err, docs) {
@@ -19,16 +18,13 @@ NonoQuery.prototype = {
 
 
   add: function(puzzleToAdd, onQueryFinished) {
-    console.log(this.url);
     MongoClient.connect(this.url, function(err, db) {
       if(db){
           var collection = db.collection('nonograms');
           if (nonoToAdd._id === undefined){
-            console.log("undefined id")
           collection.save(nonoToAdd);
           }else
           {
-          console.log("id not undefined")
           //find the nono
           var found = collection.find({timestamp: nonoToAdd.timestamp})
 

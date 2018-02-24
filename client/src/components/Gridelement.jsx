@@ -2,7 +2,7 @@ const React = require('react');
 class Gridelement extends React.Component{
 
  constructor(props){
-   super()
+   super(props)
    this.state = {cell: props.data, onclick: props.onclick, rowno: props.data.cellRow, colno: props.data.cellCol, show: props.show , cellId: 'r'+props.data.cellRow+'c'+props.data.cellCol}
   }
 

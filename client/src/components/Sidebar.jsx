@@ -22,8 +22,7 @@ class Sidebar extends React.Component{
     if (this.state){
       for (var i=0; i< this.state.puzzles.length;i++ ){
         options.push({id: i, content: this.state.puzzles[i].name})
-      }
-    options.push({id: this.state.puzzles.length, content: "New puzzle"}) 
+      } 
     }
     return(
       <div id='sidebar' onClick = {this.listClick.bind(this)}>

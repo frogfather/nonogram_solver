@@ -5,6 +5,7 @@ import Status from '../components/Status'
 import Sidebar from '../components/Sidebar'
 import Controls from '../components/Controls'
 import Game from '../containers/Game'
+import Gamedata from '../models/Gamedata'
 
 class Surround extends React.Component{
 
@@ -20,6 +21,8 @@ class Surround extends React.Component{
         puzzleList.push(puzzle)
         }
       }
+    var blankPuzzle = new Gamedata();
+    puzzleList.push(blankPuzzle)
     var newState = {puzzles: puzzleList, current: null, show: 'user'}
     this.setState(newState)
     }.bind(this))
@@ -39,6 +42,7 @@ class Surround extends React.Component{
 
   }
 
+  
   clickPuzzleList(event){
     if (event.target.id === "sidebar"){
   } else {
@@ -49,6 +53,10 @@ class Surround extends React.Component{
     } else {
       this.setState({current: null})
       console.log("new puzzle coming up!")
+      //we want to ask the user for the puzzle size
+      //create a new puzzle by new Puzzle (options) where options is the information about the new puzzle
+      //lets make a new game
+      
     }
     
   }
@@ -65,9 +73,6 @@ class Surround extends React.Component{
 
   render(){
     if (this.state){
-      console.log("rendering surround")
-      console.log("current game is "+ this.state.current)
-      console.log(this.state)
     return(
       <div id='frame'>
         <div id= 'header'>Nonograms!</div>
