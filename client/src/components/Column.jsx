@@ -15,7 +15,6 @@ this.state = {data: options.coldata}
     var options = this.state.data.map(function(coldata,index){
       return <Datacol value={index} key={index} data={coldata} esize={this.props.esize}/>
     }.bind(this))
-    console.log(divStyle)
     return(
       <div id='column' style={divStyle}>
       {options}

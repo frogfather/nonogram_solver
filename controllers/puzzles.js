@@ -5,6 +5,10 @@ var query = new PuzzleQuery();
 
 
 puzzleRouter.get('/', function(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS,GET,PUT,POST,DELETE');
+  res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+  console.log("get puzzles")
   query.all(function(results){
     res.json(results);
   });

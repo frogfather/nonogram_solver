@@ -8,7 +8,6 @@ class Datacol extends React.Component{
 
 
   render(){
-
     var options = this.state.data.map(function(clue,index){
       return <Dataelement value={index} key={index} solved ={clue.solved} data={clue.number} esize={this.props.esize}/>
     }.bind(this))

@@ -11,7 +11,7 @@ class Dataelement extends React.Component{
   render(){
     var divStyle;
     if (this.props.solved === -1){divStyle = {color: 'black', width: this.props.esize, height: this.props.esize}}
-    else {divStyle = {color: 'red'}}
+    else {divStyle = {color: 'red', width: this.props.esize, height: this.props.esize}}
     return(
       <div id='dataelement' style={divStyle}>
       {this.state.number}

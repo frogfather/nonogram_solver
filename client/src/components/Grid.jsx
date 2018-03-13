@@ -11,8 +11,6 @@ class Grid extends React.Component{
 
 
   render(){
-    console.log("rendering grid")
-    console.log(this.props)
     var options = this.state.rows.map(function(row,index){
       return <Gridrow onclick={this.state.onclick} value={index} key={index} data={row} esize={this.props.esize}/>
     }.bind(this))

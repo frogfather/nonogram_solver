@@ -249,7 +249,7 @@ solveThePuzzle(){
 
 
 render(){
-  console.log(this.props.options.current)
+  console.log('Render game. esize and margin below')
   console.log(this.state.esize)
   console.log(this.state.lmargin)
   if (this.props.options.current != null){
